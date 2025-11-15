@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settler - Board Setup</title>
+    <title>Settler - Game Setup</title>
     <style>
         * {
             margin: 0;
@@ -20,6 +21,80 @@
             justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 40px 20px;
+        }
+
+        /* --- Player Setup Screen Styles --- */
+        #player-setup-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .setup-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 400px;
+            text-align: center;
+        }
+
+        .setup-card h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #64748b;
+            background: #1e293b;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+
+        #player-inputs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* --- Game Screen Styles --- */
+        #game-screen {
+            display: none; /* Hidden by default */
+            flex-direction: row; 
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .header {
@@ -142,40 +217,51 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
         }
 
-        /* Resource colors */
+        .resource-wood,
+        .resource-brick,
+        .resource-sheep,
+        .resource-wheat,
+        .resource-ore,
+        .resource-desert {
+            background-size: cover;
+            background-position: center;
+        }
+
         .resource-wood {
-            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            background-image: url('{% static "game/images/forest.png" %}');
+            background-color: #16a34a; 
         }
 
         .resource-brick {
-            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+            background-image: url('{% static "game/images/hill.png" %}');
+            background-color: #dc2626;
         }
 
         .resource-sheep {
-            background: linear-gradient(135deg, #84cc16 0%, #a3e635 100%);
+            background-image: url('{% static "game/images/pasture.png" %}');
+            background-color: #84cc16;
         }
 
         .resource-wheat {
-            background: linear-gradient(135deg, #eab308 0%, #fbbf24 100%);
+            background-image: url('{% static "game/images/field.png" %}');
+            background-color: #eab308;
         }
 
         .resource-ore {
-            background: linear-gradient(135deg, #71717a 0%, #a1a1aa 100%);
+            background-image: url('{% static "game/images/mountain.png" %}');
+            background-color: #71717a;
         }
 
         .resource-desert {
-            background: linear-gradient(135deg, #d4c5a0 0%, #e8dcc0 100%);
+            background-image: url('{% static "game/images/desert.png" %}');
+            background-color: #d4c5a0;
         }
-
-        /* EMOJI ICON REMOVED */
 
         .number-token {
             position: absolute;
-            /* MOVED TO CENTER */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            /* MADE SMALLER */
             width: 40px;
             height: 40px;
             background: white;
@@ -189,7 +275,6 @@
         }
 
         .number-value {
-            /* FONT SIZE REDUCED */
             font-size: 20px;
             font-weight: 900;
             color: #1e293b;
@@ -201,12 +286,11 @@
 
         .number-pips {
             display: flex;
-            gap: 1.5px; /* Tightened gap */
+            gap: 1.5px; 
             margin-top: -2px;
         }
 
         .pip {
-            /* PIPS MADE SMALLER */
             width: 3px;
             height: 3px;
             background: #1e293b;
@@ -227,13 +311,10 @@
             50% { box-shadow: 0 0 0 4px #60a5fa, 0 8px 24px rgba(59, 130, 246, 0.6); }
         }
 
-        /* --- Settlement Node CSS (Tuned) --- */
         .settlement-node {
             position: absolute;
-            /* MADE SMALLER */
             width: 14px;
             height: 14px;
-            /* MADE SLIGHTLY TRANSPARENT */
             background: rgba(255, 255, 255, 0.7);
             border: 2px solid #1e293b;
             border-radius: 50%;
@@ -247,10 +328,14 @@
             background: #fbbf24;
             border-color: #f59e0b;
             transform: translate(-50%, -50%) scale(1.3);
-            opacity: 1; /* Full opacity on hover */
+            opacity: 1;
         }
-        /* --- End of Node CSS --- */
 
+        .settlement-node.placed {
+            transform: translate(-50%, -50%) scale(1.2);
+            border-width: 3px;
+            opacity: 1;
+        }
 
         .instructions {
             margin-top: 25px;
@@ -299,55 +384,238 @@
         .control-button.secondary {
             background: linear-gradient(135deg, #64748b, #475569);
         }
+
+        .player-sidebar {
+            width: 200px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            display: none; /* Hidden until game starts */
+            flex-direction: column;
+            gap: 15px;
+            align-self: flex-start; 
+            margin-top: 78px; 
+        }
+
+        .player-sidebar h3 {
+            text-align: center;
+            font-size: 18px;
+            color: #cbd5e1;
+            border-bottom: 1px solid #64748b;
+            padding-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .player-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .player-card.active {
+            background: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transform: scale(1.05);
+        }
+
+        .player-color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid white;
+            flex-shrink: 0;
+        }
+
+        .player-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        /* --- NEW: Draft Summary Screen Styles --- */
+        #draft-summary-screen {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        #summary-cards-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            padding: 20px;
+            width: 220px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid #475569;
+        }
+
+        .summary-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #475569;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .summary-card-header .player-name {
+            font-size: 18px;
+        }
+
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .stat-label {
+            color: #cbd5e1;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #fbbf24; /* Highlight color for stats */
+        }
+
+        .win-percentage {
+            text-align: center;
+        }
+
+        .win-percentage .stat-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .win-percentage .stat-value {
+            font-size: 42px;
+            font-weight: 900;
+            color: #22c55e; /* Green for win % */
+        }
+        /* --- End Summary Screen Styles --- */
+
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="title">SETTLER</div>
-        <div class="subtitle">BOARD SETUP</div>
-    </div>
 
-    <div class="setup-steps">
-        <div class="step active" id="step-1">
-            <div class="step-number">1</div>
-            <span>Set Resources</span>
+    <div id="player-setup-screen">
+        <div class="header">
+            <div class="title">SETTLER</div>
+            <div class="subtitle">GAME SETUP</div>
         </div>
-        <div class="step" id="step-2">
-            <div class="step-number">2</div>
-            <span>Place Numbers</span>
+        <div class="setup-card">
+            <h2>Create Your Game</h2>
+            <div class="form-group">
+                <label for="player-count-select">Number of Players</label>
+                <select id="player-count-select">
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4" selected>4 Players</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Player Names</label>
+                <div id="player-inputs-container">
+                    </div>
+            </div>
+
+            <button class="control-button" id="start-game-btn" style="width: 100%;">Start Game</button>
         </div>
-        <div class="step" id="step-3">
-            <div class="step-number">3</div>
-            <span>Begin Draft</span>
+    </div>
+
+    <div id="game-screen">
+        <div class="main-content">
+            <div class="header">
+                <div class="title">SETTLER</div>
+                <div class="subtitle">BOARD SETUP</div>
+            </div>
+
+            <div class="setup-steps">
+                <div class="step active" id="step-1">
+                    <div class="step-number">1</div>
+                    <span>Set Resources</span>
+                </div>
+                <div class="step" id="step-2">
+                    <div class="step-number">2</div>
+                    <span>Place Numbers</span>
+                </div>
+                <div class="step" id="step-3">
+                    <div class="step-number">3</div>
+                    <span>Begin Draft</span>
+                </div>
+            </div>
+
+            <div class="board-container">
+                <div class="board" id="board"></div>
+            </div>
+
+            <div classs="instructions" id="instructions">
+                <span class="instruction-highlight">Click any tile</span> to cycle through resource types (Wood → Brick → Sheep → Wheat → Ore → Desert)
+            </div>
+
+            <div class="controls">
+                <button class="control-button secondary" onclick="randomizeBoard()">Randomize All</button>
+                <button class="control-button" id="nextButton" onclick="nextStep()">Continue to Number Placement →</button>
+            </div>
+        </div>
+
+        <div class="player-sidebar" id="player-sidebar">
+            <h3>PLAYERS</h3>
+            <div id="player-list">
+                </div>
         </div>
     </div>
 
-    <div class="board-container">
-        <div class="board" id="board"></div>
+    <div id="draft-summary-screen">
+        <div class="header">
+            <div class="title">DRAFT SUMMARY</div>
+        </div>
+        <div id="summary-cards-container">
+            </div>
+        <button class="control-button" id="play-again-btn">Play Again</button>
     </div>
 
-    <div class="instructions" id="instructions">
-        <span class="instruction-highlight">Click any tile</span> to cycle through resource types (Wood → Brick → Sheep → Wheat → Ore → Desert)
-    </div>
-
-    <div class="controls">
-        <button class="control-button secondary" onclick="randomizeBoard()">Randomize All</button>
-        <button class="control-button" id="nextButton" onclick="nextStep()">Continue to Number Placement →</button>
-    </div>
 
     <script>
         // Game state
         let currentStep = 1;
         let startingHexIndex = null;
         
-        const resources = ['wood', 'brick', 'sheep', 'wheat', 'ore', 'desert'];
+        let players = [];
+        let placementOrder = [];
+        let currentPlacementTurn = 0; 
         
-        // EMOJI OBJECT REMOVED
+        const playerColors = [
+            "#EF4444", // Red
+            "#3B82F6", // Blue
+            "#FFFFFF", // White
+            "#F97316", // Orange
+            "#22C55E", // Green
+            "#EAB308"  // Yellow
+        ];
 
-        // Standard Catan number distribution (spiral order)
+        const resources = ['wood', 'brick', 'sheep', 'wheat', 'ore', 'desert'];
         const numberSequence = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11];
-
-        // Hex positions (perfectly aligned - don't change!)
         const hexPositions = [
             { x: 105, y: 0 }, { x: 242, y: 0 }, { x: 378, y: 0 },
             { x: 36, y: 105 }, { x: 174, y: 105 }, { x: 309, y: 105 }, { x: 447, y: 105 },
@@ -356,7 +624,6 @@
             { x: 105, y: 420 }, { x: 242, y: 420 }, { x: 378, y: 420 }
         ];
 
-        // --- Node Positions (from File 2) ---
         const nodePositions = [
             { x: 174, y: 0 }, { x: 312, y: 0 }, { x: 448, y: 0 }, 
             { x: 105, y: 35 }, { x: 242, y: 35 }, { x: 378, y: 35 }, { x: 519, y: 35 },
@@ -371,13 +638,10 @@
             { x: 105, y: 525 }, { x: 242, y: 525 }, { x: 378, y: 525 }, { x: 519, y: 525 },
             { x: 174, y: 560 }, { x: 309, y: 560 }, { x: 447, y: 560 },
         ];
-        // --- End of Node Positions ---
 
-        // Spiral patterns from different starting positions
         const spiralPatterns = {
-            0: [0, 1, 2, 6, 11, 10, 9, 8, 4, 3, 5, 7, 15, 14, 13, 12, 16, 17, 18],
+            0: [0, 1, 2, 6, 11, 15, 18, 17, 16, 12, 7, 3, 4, 5, 10, 14, 13, 8, 9],
             2: [2, 6, 11, 15, 14, 13, 12, 7, 8, 9, 10, 1, 5, 4, 3, 16, 17, 18, 0],
-            // Add more as needed
         };
 
         const tiles = hexPositions.map(() => ({
@@ -387,6 +651,67 @@
         }));
 
         const board = document.getElementById('board');
+
+        // --- Setup Screen JS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const setupScreen = document.getElementById('player-setup-screen');
+            const gameScreen = document.getElementById('game-screen');
+            const summaryScreen = document.getElementById('draft-summary-screen'); // NEW
+            const playerSelect = document.getElementById('player-count-select');
+            const inputsContainer = document.getElementById('player-inputs-container');
+            const startGameBtn = document.getElementById('start-game-btn');
+            const playAgainBtn = document.getElementById('play-again-btn'); // NEW
+
+            function generatePlayerInputs() {
+                const count = playerSelect.value;
+                inputsContainer.innerHTML = ''; 
+                for (let i = 1; i <= count; i++) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = `Player ${i} Name`;
+                    input.className = 'player-name-input';
+                    input.value = `Player ${i}`; 
+                    inputsContainer.appendChild(input);
+                }
+            }
+
+            function initializeGame() {
+                const nameInputs = document.querySelectorAll('.player-name-input');
+                players = []; 
+                nameInputs.forEach((input, index) => {
+                    players.push({
+                        name: input.value || `Player ${index + 1}`,
+                        color: playerColors[index] 
+                    });
+                });
+
+                placementOrder = [];
+                for (let i = 0; i < players.length; i++) {
+                    placementOrder.push(i); // Forward
+                }
+                for (let i = players.length - 1; i >= 0; i--) {
+                    placementOrder.push(i); // Backward
+                }
+
+                setupScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
+                document.title = 'Settler - Board Setup';
+                initializeBoard();
+            }
+
+            // NEW: Function to restart the game
+            function restartGame() {
+                window.location.reload();
+            }
+
+            playerSelect.addEventListener('change', generatePlayerInputs);
+            startGameBtn.addEventListener('click', initializeGame);
+            playAgainBtn.addEventListener('click', restartGame); // NEW
+
+            generatePlayerInputs();
+        });
+        
+        // --- Board & Draft JS ---
 
         function createHex(pos, index) {
             const hex = document.createElement('div');
@@ -398,8 +723,6 @@
             const hexInner = document.createElement('div');
             hexInner.className = `hex-inner resource-${tiles[index].resource}`;
             
-            // ICON CREATION REMOVED
-            
             hex.appendChild(hexInner);
             hex.addEventListener('click', () => handleHexClick(hex, index));
             
@@ -408,16 +731,12 @@
 
         function handleHexClick(hex, index) {
             if (currentStep === 1) {
-                // Cycle through resources
                 tiles[index].resourceIndex = (tiles[index].resourceIndex + 1) % resources.length;
                 tiles[index].resource = resources[tiles[index].resourceIndex];
                 
                 const hexInner = hex.querySelector('.hex-inner');
-                // ICON UPDATE REMOVED
-                
                 hexInner.className = `hex-inner resource-${tiles[index].resource}`;
             } else if (currentStep === 2) {
-                // Select starting position for number spiral
                 document.querySelectorAll('.hex').forEach(h => h.classList.remove('start-position'));
                 hex.classList.add('start-position');
                 startingHexIndex = index;
@@ -449,16 +768,14 @@
             }
             token.appendChild(pipsContainer);
             
-            // Add token to the hex's INNER div to respect clip-path
             const hexInner = hex.querySelector('.hex-inner');
             if (hexInner) {
                 hexInner.appendChild(token);
             } else {
-                hex.appendChild(token); // Fallback
+                hex.appendChild(token); 
             }
         }
 
-        // --- Node Functions (from File 2) ---
         function createNode(pos, id) {
             const node = document.createElement('div');
             node.className = 'settlement-node';
@@ -466,43 +783,127 @@
             node.style.left = `${pos.x}px`;
             node.style.top = `${pos.y}px`;
             node.title = `Settlement Node ${id}`;
-            
-            // Add click listener for the draft
-            node.addEventListener('click', () => handleNodeClick(id));
+            node.addEventListener('click', () => handleNodeClick(node, id));
             return node;
         }
 
-        function highlightNode(nodeId) {
-            // Reset all other nodes
-            document.querySelectorAll('.settlement-node').forEach(n => {
-                n.style.background = 'rgba(255, 255, 255, 0.7)';
-                n.style.borderColor = '#1e293b';
-                n.style.transform = 'translate(-50%, -50%)';
-            });
-            
-            // Highlight the clicked node
-            const node = document.getElementById(nodeId);
-            if (node) {
-                node.style.background = '#fbbf24';
-                node.style.borderColor = '#f59e0b';
-                node.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                node.style.opacity = 1;
+        function handleNodeClick(node, id) {
+            if (node.classList.contains('placed')) {
+                console.log('Node already taken');
+                return;
             }
+            if (currentPlacementTurn >= placementOrder.length) {
+                console.log('Draft is complete');
+                return;
+            }
+
+            const playerIndex = placementOrder[currentPlacementTurn];
+            const player = players[playerIndex];
+            console.log(`Node ${id} clicked by ${player.name}`);
+
+            node.style.background = player.color;
+            node.style.borderColor = '#111';
+            node.classList.add('placed');
+            node.dataset.owner = playerIndex;
+            node.style.pointerEvents = 'none'; 
+
+            currentPlacementTurn++;
+            updateTurnIndicator();
         }
 
-        function handleNodeClick(id) {
-            console.log(`Node ${id} clicked for drafting.`);
-            // Highlight the selected node
-            highlightNode(`node-${id}`);
-            
-            // --- THIS IS WHERE YOU ADD YOUR DRAFT LOGIC ---
-            // e.g., check if node is valid, assign to player, etc.
+        function populateSidebar() {
+            const playerList = document.getElementById('player-list');
+            playerList.innerHTML = ''; 
+
+            players.forEach((player, index) => {
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.id = `player-card-${index}`;
+
+                const swatch = document.createElement('div');
+                swatch.className = 'player-color-swatch';
+                swatch.style.background = player.color;
+
+                const name = document.createElement('div');
+                name.className = 'player-name';
+                name.textContent = player.name;
+
+                card.appendChild(swatch);
+                card.appendChild(name);
+                playerList.appendChild(card);
+            });
         }
-        // --- End of Node Functions ---
+
+        /* MODIFIED: Now triggers summary screen */
+        function updateTurnIndicator() {
+            const instructions = document.getElementById('instructions');
+            document.querySelectorAll('.player-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            if (currentPlacementTurn >= placementOrder.length) {
+                instructions.innerHTML = 'Settlement draft complete!';
+                
+                // --- NEW: Trigger Summary Screen ---
+                // Use a short timeout to let the last move render
+                setTimeout(() => {
+                    document.getElementById('game-screen').style.display = 'none';
+                    generateDraftSummary();
+                    document.getElementById('draft-summary-screen').style.display = 'flex';
+                }, 1000); 
+                // --- End of new trigger ---
+                
+                return;
+            }
+
+            const nextPlayerIndex = placementOrder[currentPlacementTurn];
+            const nextPlayer = players[nextPlayerIndex];
+
+            document.getElementById(`player-card-${nextPlayerIndex}`).classList.add('active');
+            instructions.innerHTML = `<span style="color:${nextPlayer.color}; text-shadow: 0 0 2px #000;">${nextPlayer.name}</span>, place your settlement.`;
+        }
+        
+        /* NEW: Function to generate summary */
+        function generateDraftSummary() {
+            const container = document.getElementById('summary-cards-container');
+            container.innerHTML = ''; // Clear old data
+
+            players.forEach(player => {
+                // --- MOCK DATA GENERATION ---
+                // (We will replace this with real data later)
+                const totalPips = Math.floor(Math.random() * 10) + 5; // 5-14
+                const resourceAccess = (Math.random() > 0.3) ? "5/5" : "4/5";
+                const winPercentage = Math.floor(Math.random() * 20) + 20; // 20-39%
+                // --- END MOCK DATA ---
+
+                const cardHTML = `
+                    <div class="summary-card">
+                        <div class="summary-card-header">
+                            <div class="player-color-swatch" style="background: ${player.color};"></div>
+                            <div class="player-name">${player.name}</div>
+                        </div>
+                        <div class="summary-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Pips</span>
+                                <span class="stat-value">${totalPips}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Resource Access</span>
+                                <span class="stat-value">${resourceAccess}</span>
+                            </div>
+                        </div>
+                        <div class="win-percentage">
+                            <div class="stat-label">Probable Win %</div>
+                            <div class="stat-value">${winPercentage}%</div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
 
 
         function randomizeBoard() {
-            // Standard Catan distribution: 4 wood, 4 sheep, 4 wheat, 3 brick, 3 ore, 1 desert
             const resourcePool = [
                 'wood', 'wood', 'wood', 'wood',
                 'sheep', 'sheep', 'sheep', 'sheep',
@@ -512,28 +913,23 @@
                 'desert'
             ];
             
-            // Fisher-Yates shuffle
             for (let i = resourcePool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [resourcePool[i], resourcePool[j]] = [resourcePool[j], resourcePool[i]];
             }
             
-            // Assign to tiles
             tiles.forEach((tile, index) => {
                 tile.resource = resourcePool[index];
                 tile.resourceIndex = resources.indexOf(tile.resource);
                 
                 const hex = document.querySelector(`[data-index="${index}"]`);
                 const hexInner = hex.querySelector('.hex-inner');
-                // ICON UPDATE REMOVED
-                
                 hexInner.className = `hex-inner resource-${tile.resource}`;
             });
         }
 
         function nextStep() {
             if (currentStep === 1) {
-                // Move to number placement
                 currentStep = 2;
                 document.getElementById('step-1').classList.remove('active');
                 document.getElementById('step-1').classList.add('completed');
@@ -546,7 +942,6 @@
                 document.getElementById('nextButton').disabled = true;
                 
             } else if (currentStep === 2) {
-                // Place numbers in spiral pattern
                 if (startingHexIndex === null) return;
                 
                 const pattern = spiralPatterns[startingHexIndex] || spiralPatterns[0];
@@ -555,7 +950,6 @@
                 pattern.forEach(hexIndex => {
                     const hex = document.querySelector(`[data-index="${hexIndex}"]`);
                     
-                    // Clear any existing number tokens (important for re-running)
                     const existingToken = hex.querySelector('.number-token');
                     if (existingToken) {
                         existingToken.remove();
@@ -566,7 +960,7 @@
                         addNumberToken(hex, numberSequence[numberIndex]);
                         numberIndex++;
                     } else {
-                        tiles[hexIndex].number = null; // Ensure desert has no number
+                        tiles[hexIndex].number = null; 
                     }
                 });
                 
@@ -587,7 +981,6 @@
         }
 
         function startAlgorithm() {
-            // Prepare board data for Django backend
             const boardData = {
                 tiles: tiles.map((tile, index) => ({
                     index: index,
@@ -599,31 +992,25 @@
             
             console.log('Board configuration:', boardData);
             
-            // --- MODIFIED SECTION ---
-            // Render 54 settlement nodes for drafting
             nodePositions.forEach((pos, i) => {
                 board.appendChild(createNode(pos, i + 1));
             });
             console.log(`Created ${nodePositions.length} settlement nodes`);
 
-            // Update instructions and controls for draft phase
-            document.getElementById('instructions').innerHTML = 
-                'Board setup complete! <span class="instruction-highlight">Click an available node</span> to place your first settlement.';
+            document.getElementById('player-sidebar').style.display = 'flex';
+            populateSidebar();
+            updateTurnIndicator();
             
-            // Hide setup buttons
             document.querySelector('.controls').style.display = 'none';
-            // --- END OF MODIFIED SECTION ---
         }
 
-        // Initialize board
-        hexPositions.forEach((pos, i) => {
-            board.appendChild(createHex(pos, i));
-        });
+        function initializeBoard() {
+            hexPositions.forEach((pos, i) => {
+                board.appendChild(createHex(pos, i));
+            });
+            console.log('Settler Board Setup initialized');
+        }
 
-        console.log('Settler Board Setup initialized');
-        console.log('- Step 1: Click tiles to set resources or use "Randomize All"');
-        console.log('- Step 2: Select starting hex for number spiral');
-        console.log('- Step 3: Start algorithm with configured board');
     </script>
 </body>
 </html>
