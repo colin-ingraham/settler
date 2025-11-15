@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settler - Catan Board Builder</title>
+    <title>Settler - Board Setup</title>
     <style>
         * {
             margin: 0;
@@ -24,7 +24,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .title {
@@ -40,6 +40,50 @@
             font-size: 16px;
             color: #cbd5e1;
             letter-spacing: 2px;
+        }
+
+        .setup-steps {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 16px 32px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .step.active {
+            color: #3b82f6;
+        }
+
+        .step.completed {
+            color: #22c55e;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step.completed .step-number {
+            background: #22c55e;
+            color: white;
         }
 
         .board-container {
@@ -68,14 +112,14 @@
 
         .board {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: 640px;
+            height: 560px;
         }
 
         .hex {
             position: absolute;
-            width: 100px;
-            height: 100px;
+            width: 140px;
+            height: 140px;
             cursor: pointer;
             transition: transform 0.2s ease;
         }
@@ -123,86 +167,223 @@
             background: linear-gradient(135deg, #d4c5a0 0%, #e8dcc0 100%);
         }
 
-        .resource-icon {
+        /* EMOJI ICON REMOVED */
+
+        .number-token {
             position: absolute;
+            /* MOVED TO CENTER */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 40px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            /* MADE SMALLER */
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
         }
 
+        .number-value {
+            /* FONT SIZE REDUCED */
+            font-size: 20px;
+            font-weight: 900;
+            color: #1e293b;
+        }
+
+        .number-value.red {
+            color: #dc2626;
+        }
+
+        .number-pips {
+            display: flex;
+            gap: 1.5px; /* Tightened gap */
+            margin-top: -2px;
+        }
+
+        .pip {
+            /* PIPS MADE SMALLER */
+            width: 3px;
+            height: 3px;
+            background: #1e293b;
+            border-radius: 50%;
+        }
+
+        .pip.red {
+            background: #dc2626;
+        }
+
+        .hex.start-position .hex-inner {
+            box-shadow: 0 0 0 4px #3b82f6, 0 8px 20px rgba(0, 0, 0, 0.5);
+            animation: pulse-border 1.5s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 0 4px #3b82f6, 0 8px 20px rgba(0, 0, 0, 0.5); }
+            50% { box-shadow: 0 0 0 4px #60a5fa, 0 8px 24px rgba(59, 130, 246, 0.6); }
+        }
+
+        /* --- Settlement Node CSS (Tuned) --- */
+        .settlement-node {
+            position: absolute;
+            /* MADE SMALLER */
+            width: 14px;
+            height: 14px;
+            /* MADE SLIGHTLY TRANSPARENT */
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid #1e293b;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .settlement-node:hover {
+            background: #fbbf24;
+            border-color: #f59e0b;
+            transform: translate(-50%, -50%) scale(1.3);
+            opacity: 1; /* Full opacity on hover */
+        }
+        /* --- End of Node CSS --- */
+
+
         .instructions {
-            margin-top: 30px;
+            margin-top: 25px;
             text-align: center;
             color: #cbd5e1;
-            font-size: 14px;
+            font-size: 15px;
+            max-width: 600px;
+        }
+
+        .instruction-highlight {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .control-button {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s;
+        }
+
+        .control-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+
+        .control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .control-button.secondary {
+            background: linear-gradient(135deg, #64748b, #475569);
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="title">SETTLER</div>
-        <div class="subtitle">BOARD BUILDER</div>
+        <div class="subtitle">BOARD SETUP</div>
+    </div>
+
+    <div class="setup-steps">
+        <div class="step active" id="step-1">
+            <div class="step-number">1</div>
+            <span>Set Resources</span>
+        </div>
+        <div class="step" id="step-2">
+            <div class="step-number">2</div>
+            <span>Place Numbers</span>
+        </div>
+        <div class="step" id="step-3">
+            <div class="step-number">3</div>
+            <span>Begin Draft</span>
+        </div>
     </div>
 
     <div class="board-container">
         <div class="board" id="board"></div>
     </div>
 
-    <div class="instructions">
-        Click any tile to change its resource type
+    <div class="instructions" id="instructions">
+        <span class="instruction-highlight">Click any tile</span> to cycle through resource types (Wood → Brick → Sheep → Wheat → Ore → Desert)
+    </div>
+
+    <div class="controls">
+        <button class="control-button secondary" onclick="randomizeBoard()">Randomize All</button>
+        <button class="control-button" id="nextButton" onclick="nextStep()">Continue to Number Placement →</button>
     </div>
 
     <script>
+        // Game state
+        let currentStep = 1;
+        let startingHexIndex = null;
+        
         const resources = ['wood', 'brick', 'sheep', 'wheat', 'ore', 'desert'];
         
-        const resourceIcons = {
-            'wood': '🌲',
-            'brick': '🧱',
-            'sheep': '🐑',
-            'wheat': '🌾',
-            'ore': '⛰️',
-            'desert': '🌵'
-        };
+        // EMOJI OBJECT REMOVED
 
-        // Perfect hexagon positions - mathematically calculated for seamless tiling
-        // For 100px hexagons: horizontal spacing = 75px, vertical spacing = 75px
+        // Standard Catan number distribution (spiral order)
+        const numberSequence = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11];
+
+        // Hex positions (perfectly aligned - don't change!)
         const hexPositions = [
-            // Row 0 - 3 hexes (offset by 75px)
-            { x: 75, y: 0 },
-            { x: 173, y: 0 },
-            { x: 270, y: 0 },
-            
-            // Row 1 - 4 hexes (offset by 37.5px)
-            { x: 26, y: 75 },
-            { x: 124, y: 75 },
-            { x: 221, y: 75 },
-            { x: 319, y: 75 },
-            
-            // Row 2 - 5 hexes (no offset)
-            { x: -23, y: 150 },
-            { x: 75, y: 150 },
-            { x: 173, y: 150 },
-            { x: 270, y: 150 },
-            { x: 367, y: 150 },
-            
-            // Row 3 - 4 hexes (offset by 37.5px)
-            { x: 26, y: 225 },
-            { x: 124, y: 225 },
-            { x: 221, y: 225 },
-            { x: 319, y: 225 },
-            
-            // Row 4 - 3 hexes (offset by 75px)
-            { x: 75, y: 300 },
-            { x: 173, y: 300 },
-            { x: 270, y: 300 }
+            { x: 105, y: 0 }, { x: 242, y: 0 }, { x: 378, y: 0 },
+            { x: 36, y: 105 }, { x: 174, y: 105 }, { x: 309, y: 105 }, { x: 447, y: 105 },
+            { x: -32, y: 210 }, { x: 105, y: 210 }, { x: 242, y: 210 }, { x: 378, y: 210 }, { x: 514, y: 210 },
+            { x: 36, y: 315 }, { x: 174, y: 315 }, { x: 309, y: 315 }, { x: 447, y: 315 },
+            { x: 105, y: 420 }, { x: 242, y: 420 }, { x: 378, y: 420 }
         ];
 
-        // Initialize tiles with default resources
+        // --- Node Positions (from File 2) ---
+        const nodePositions = [
+            { x: 174, y: 0 }, { x: 312, y: 0 }, { x: 448, y: 0 }, 
+            { x: 105, y: 35 }, { x: 242, y: 35 }, { x: 378, y: 35 }, { x: 519, y: 35 },
+            { x: 105, y: 105 }, { x: 242, y: 105 }, { x: 378, y: 105 }, { x: 519, y: 105 },
+            { x: 36, y: 140 }, { x: 174, y: 140 }, { x: 309, y: 140 }, { x: 447, y: 140 }, { x: 588, y: 140 },
+            { x: 36, y: 210 }, { x: 174, y: 210 }, { x: 309, y: 210 }, { x: 447, y: 210 }, { x: 588, y: 210 },
+            { x: -32, y: 245 }, { x: 105, y: 245 }, { x: 242, y: 245 }, { x: 378, y: 245 }, { x: 519, y: 245 }, { x: 655, y: 245 }, 
+            { x: -32, y: 315 }, { x: 105, y: 315 }, { x: 242, y: 315 }, { x: 378, y: 315 }, { x: 519, y: 315 }, { x: 655, y: 315 },
+            { x: 36, y: 350 }, { x: 174, y: 350 }, { x: 309, y: 350 }, { x: 447, y: 350 }, { x: 588, y: 350 },
+            { x: 36, y: 420 }, { x: 174, y: 420 }, { x: 309, y: 420 }, { x: 447, y: 420 }, { x: 588, y: 420 }, 
+            { x: 105, y: 455 }, { x: 242, y: 455 }, { x: 378, y: 455 }, { x: 519, y: 455 },
+            { x: 105, y: 525 }, { x: 242, y: 525 }, { x: 378, y: 525 }, { x: 519, y: 525 },
+            { x: 174, y: 560 }, { x: 309, y: 560 }, { x: 447, y: 560 },
+        ];
+        // --- End of Node Positions ---
+
+        // Spiral patterns from different starting positions
+        const spiralPatterns = {
+            0: [0, 1, 2, 6, 11, 10, 9, 8, 4, 3, 5, 7, 15, 14, 13, 12, 16, 17, 18],
+            2: [2, 6, 11, 15, 14, 13, 12, 7, 8, 9, 10, 1, 5, 4, 3, 16, 17, 18, 0],
+            // Add more as needed
+        };
+
         const tiles = hexPositions.map(() => ({
-            currentResource: 'wood',
-            resourceIndex: 0
+            resource: 'wood',
+            resourceIndex: 0,
+            number: null
         }));
 
         const board = document.getElementById('board');
@@ -212,33 +393,237 @@
             hex.className = 'hex';
             hex.style.left = `${pos.x}px`;
             hex.style.top = `${pos.y}px`;
+            hex.dataset.index = index;
             
             const hexInner = document.createElement('div');
-            hexInner.className = `hex-inner resource-${tiles[index].currentResource}`;
+            hexInner.className = `hex-inner resource-${tiles[index].resource}`;
             
-            const icon = document.createElement('div');
-            icon.className = 'resource-icon';
-            icon.textContent = resourceIcons[tiles[index].currentResource];
-            hexInner.appendChild(icon);
+            // ICON CREATION REMOVED
             
             hex.appendChild(hexInner);
-            
-            // Click handler to cycle through resources
-            hex.addEventListener('click', () => {
-                tiles[index].resourceIndex = (tiles[index].resourceIndex + 1) % resources.length;
-                tiles[index].currentResource = resources[tiles[index].resourceIndex];
-                
-                hexInner.className = `hex-inner resource-${tiles[index].currentResource}`;
-                icon.textContent = resourceIcons[tiles[index].currentResource];
-            });
+            hex.addEventListener('click', () => handleHexClick(hex, index));
             
             return hex;
         }
 
-        // Render all hexagons
+        function handleHexClick(hex, index) {
+            if (currentStep === 1) {
+                // Cycle through resources
+                tiles[index].resourceIndex = (tiles[index].resourceIndex + 1) % resources.length;
+                tiles[index].resource = resources[tiles[index].resourceIndex];
+                
+                const hexInner = hex.querySelector('.hex-inner');
+                // ICON UPDATE REMOVED
+                
+                hexInner.className = `hex-inner resource-${tiles[index].resource}`;
+            } else if (currentStep === 2) {
+                // Select starting position for number spiral
+                document.querySelectorAll('.hex').forEach(h => h.classList.remove('start-position'));
+                hex.classList.add('start-position');
+                startingHexIndex = index;
+                document.getElementById('nextButton').disabled = false;
+            }
+        }
+
+        function getPips(number) {
+            const pipCounts = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1 };
+            return pipCounts[number] || 0;
+        }
+
+        function addNumberToken(hex, number) {
+            const token = document.createElement('div');
+            token.className = 'number-token';
+            
+            const value = document.createElement('div');
+            value.className = `number-value ${number === 6 || number === 8 ? 'red' : ''}`;
+            value.textContent = number;
+            token.appendChild(value);
+            
+            const pipsContainer = document.createElement('div');
+            pipsContainer.className = 'number-pips';
+            const pipCount = getPips(number);
+            for (let i = 0; i < pipCount; i++) {
+                const pip = document.createElement('div');
+                pip.className = `pip ${number === 6 || number === 8 ? 'red' : ''}`;
+                pipsContainer.appendChild(pip);
+            }
+            token.appendChild(pipsContainer);
+            
+            // Add token to the hex's INNER div to respect clip-path
+            const hexInner = hex.querySelector('.hex-inner');
+            if (hexInner) {
+                hexInner.appendChild(token);
+            } else {
+                hex.appendChild(token); // Fallback
+            }
+        }
+
+        // --- Node Functions (from File 2) ---
+        function createNode(pos, id) {
+            const node = document.createElement('div');
+            node.className = 'settlement-node';
+            node.id = `node-${id}`;
+            node.style.left = `${pos.x}px`;
+            node.style.top = `${pos.y}px`;
+            node.title = `Settlement Node ${id}`;
+            
+            // Add click listener for the draft
+            node.addEventListener('click', () => handleNodeClick(id));
+            return node;
+        }
+
+        function highlightNode(nodeId) {
+            // Reset all other nodes
+            document.querySelectorAll('.settlement-node').forEach(n => {
+                n.style.background = 'rgba(255, 255, 255, 0.7)';
+                n.style.borderColor = '#1e293b';
+                n.style.transform = 'translate(-50%, -50%)';
+            });
+            
+            // Highlight the clicked node
+            const node = document.getElementById(nodeId);
+            if (node) {
+                node.style.background = '#fbbf24';
+                node.style.borderColor = '#f59e0b';
+                node.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                node.style.opacity = 1;
+            }
+        }
+
+        function handleNodeClick(id) {
+            console.log(`Node ${id} clicked for drafting.`);
+            // Highlight the selected node
+            highlightNode(`node-${id}`);
+            
+            // --- THIS IS WHERE YOU ADD YOUR DRAFT LOGIC ---
+            // e.g., check if node is valid, assign to player, etc.
+        }
+        // --- End of Node Functions ---
+
+
+        function randomizeBoard() {
+            // Standard Catan distribution: 4 wood, 4 sheep, 4 wheat, 3 brick, 3 ore, 1 desert
+            const resourcePool = [
+                'wood', 'wood', 'wood', 'wood',
+                'sheep', 'sheep', 'sheep', 'sheep',
+                'wheat', 'wheat', 'wheat', 'wheat',
+                'brick', 'brick', 'brick',
+                'ore', 'ore', 'ore',
+                'desert'
+            ];
+            
+            // Fisher-Yates shuffle
+            for (let i = resourcePool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [resourcePool[i], resourcePool[j]] = [resourcePool[j], resourcePool[i]];
+            }
+            
+            // Assign to tiles
+            tiles.forEach((tile, index) => {
+                tile.resource = resourcePool[index];
+                tile.resourceIndex = resources.indexOf(tile.resource);
+                
+                const hex = document.querySelector(`[data-index="${index}"]`);
+                const hexInner = hex.querySelector('.hex-inner');
+                // ICON UPDATE REMOVED
+                
+                hexInner.className = `hex-inner resource-${tile.resource}`;
+            });
+        }
+
+        function nextStep() {
+            if (currentStep === 1) {
+                // Move to number placement
+                currentStep = 2;
+                document.getElementById('step-1').classList.remove('active');
+                document.getElementById('step-1').classList.add('completed');
+                document.getElementById('step-2').classList.add('active');
+                
+                document.getElementById('instructions').innerHTML = 
+                    '<span class="instruction-highlight">Click a hex</span> to choose where the number spiral should start (typically a corner hex)';
+                
+                document.getElementById('nextButton').textContent = 'Place Numbers in Spiral →';
+                document.getElementById('nextButton').disabled = true;
+                
+            } else if (currentStep === 2) {
+                // Place numbers in spiral pattern
+                if (startingHexIndex === null) return;
+                
+                const pattern = spiralPatterns[startingHexIndex] || spiralPatterns[0];
+                let numberIndex = 0;
+                
+                pattern.forEach(hexIndex => {
+                    const hex = document.querySelector(`[data-index="${hexIndex}"]`);
+                    
+                    // Clear any existing number tokens (important for re-running)
+                    const existingToken = hex.querySelector('.number-token');
+                    if (existingToken) {
+                        existingToken.remove();
+                    }
+
+                    if (tiles[hexIndex].resource !== 'desert') {
+                        tiles[hexIndex].number = numberSequence[numberIndex];
+                        addNumberToken(hex, numberSequence[numberIndex]);
+                        numberIndex++;
+                    } else {
+                        tiles[hexIndex].number = null; // Ensure desert has no number
+                    }
+                });
+                
+                currentStep = 3;
+                document.getElementById('step-2').classList.remove('active');
+                document.getElementById('step-2').classList.add('completed');
+                document.getElementById('step-3').classList.add('active');
+                
+                document.querySelectorAll('.hex').forEach(h => h.classList.remove('start-position'));
+                
+                document.getElementById('instructions').innerHTML = 
+                    'Board setup complete! Ready to begin the settlement draft algorithm.';
+                
+                document.getElementById('nextButton').textContent = 'Start Algorithm →';
+                document.getElementById('nextButton').onclick = startAlgorithm;
+                document.getElementById('nextButton').disabled = false;
+            }
+        }
+
+        function startAlgorithm() {
+            // Prepare board data for Django backend
+            const boardData = {
+                tiles: tiles.map((tile, index) => ({
+                    index: index,
+                    resource: tile.resource,
+                    number: tile.number,
+                    position: hexPositions[index]
+                }))
+            };
+            
+            console.log('Board configuration:', boardData);
+            
+            // --- MODIFIED SECTION ---
+            // Render 54 settlement nodes for drafting
+            nodePositions.forEach((pos, i) => {
+                board.appendChild(createNode(pos, i + 1));
+            });
+            console.log(`Created ${nodePositions.length} settlement nodes`);
+
+            // Update instructions and controls for draft phase
+            document.getElementById('instructions').innerHTML = 
+                'Board setup complete! <span class="instruction-highlight">Click an available node</span> to place your first settlement.';
+            
+            // Hide setup buttons
+            document.querySelector('.controls').style.display = 'none';
+            // --- END OF MODIFIED SECTION ---
+        }
+
+        // Initialize board
         hexPositions.forEach((pos, i) => {
             board.appendChild(createHex(pos, i));
         });
+
+        console.log('Settler Board Setup initialized');
+        console.log('- Step 1: Click tiles to set resources or use "Randomize All"');
+        console.log('- Step 2: Select starting hex for number spiral');
+        console.log('- Step 3: Start algorithm with configured board');
     </script>
 </body>
 </html>
