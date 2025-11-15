@@ -1,0 +1,141 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #4A90C8;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+}
+
+.board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hex-row {
+    display: flex;
+    margin-bottom: -35px;
+}
+
+/* Offset every other row */
+.row-2, .row-4, .row-6 {
+    margin-left: 76px;
+}
+
+/* Individual hexagon */
+.hex {
+    width: 150px;
+    height: 130px;
+    position: relative;
+    margin: 0 2px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.hex:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* Ocean tiles */
+.hex.ocean {
+    background: linear-gradient(135deg, #4A90C8 0%, #3B7AB0 100%);
+    border: 4px solid #2C5A85;
+}
+
+/* Forest tiles - dark green */
+.hex.forest {
+    background: linear-gradient(135deg, #2D5A2D 0%, #234A23 100%);
+    border: 4px solid #1A3A1A;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Pasture/Sheep - light green */
+.hex.pasture {
+    background: linear-gradient(135deg, #7BC850 0%, #6AB840 100%);
+    border: 4px solid #5A9830;
+    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+/* Fields/Wheat - yellow/gold */
+.hex.fields {
+    background: linear-gradient(135deg, #F4D03F 0%, #E8C030 100%);
+    border: 4px solid #C8A020;
+    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+/* Hills/Brick - orange/red */
+.hex.hills {
+    background: linear-gradient(135deg, #D35400 0%, #BA4A00 100%);
+    border: 4px solid #9A3A00;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Mountains/Ore - gray */
+.hex.mountains {
+    background: linear-gradient(135deg, #7F8C8D 0%, #6C7A7B 100%);
+    border: 4px solid #5A6869;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Desert - tan (if needed later) */
+.hex.desert {
+    background: linear-gradient(135deg, #E8D4A8 0%, #D4C094 100%);
+    border: 4px solid #B4A074;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .hex {
+        width: 120px;
+        height: 104px;
+    }
+    
+    .row-2, .row-4, .row-6 {
+        margin-left: 61px;
+    }
+    
+    .hex-row {
+        margin-bottom: -28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hex {
+        width: 80px;
+        height: 69px;
+    }
+    
+    .row-2, .row-4, .row-6 {
+        margin-left: 41px;
+    }
+    
+    .hex-row {
+        margin-bottom: -19px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hex {
+        width: 60px;
+        height: 52px;
+    }
+    
+    .row-2, .row-4, .row-6 {
+        margin-left: 31px;
+    }
+    
+    .hex-row {
+        margin-bottom: -14px;
+    }
+}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settler - Catan Board Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(180deg, #2c5282 0%, #1e3a5f 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #cbd5e1;
+            letter-spacing: 2px;
+        }
+
+        .board-container {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 24px;
+            padding: 80px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .board-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 3px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.6;
+        }
+
+        .board {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .hex {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .hex:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .hex-inner {
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .hex:hover .hex-inner {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Resource colors */
+        .resource-wood {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+        }
+
+        .resource-brick {
+            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+        }
+
+        .resource-sheep {
+            background: linear-gradient(135deg, #84cc16 0%, #a3e635 100%);
+        }
+
+        .resource-wheat {
+            background: linear-gradient(135deg, #eab308 0%, #fbbf24 100%);
+        }
+
+        .resource-ore {
+            background: linear-gradient(135deg, #71717a 0%, #a1a1aa 100%);
+        }
+
+        .resource-desert {
+            background: linear-gradient(135deg, #d4c5a0 0%, #e8dcc0 100%);
+        }
+
+        .resource-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .instructions {
+            margin-top: 30px;
+            text-align: center;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">SETTLER</div>
+        <div class="subtitle">BOARD BUILDER</div>
+    </div>
+
+    <div class="board-container">
+        <div class="board" id="board"></div>
+    </div>
+
+    <div class="instructions">
+        Click any tile to change its resource type
+    </div>
+
+    <script>
+        const resources = ['wood', 'brick', 'sheep', 'wheat', 'ore', 'desert'];
+        
+        const resourceIcons = {
+            'wood': '🌲',
+            'brick': '🧱',
+            'sheep': '🐑',
+            'wheat': '🌾',
+            'ore': '⛰️',
+            'desert': '🌵'
+        };
+
+        // Perfect hexagon positions - mathematically calculated for seamless tiling
+        // For 100px hexagons: horizontal spacing = 75px, vertical spacing = 75px
+        const hexPositions = [
+            // Row 0 - 3 hexes (offset by 75px)
+            { x: 75, y: 0 },
+            { x: 173, y: 0 },
+            { x: 270, y: 0 },
+            
+            // Row 1 - 4 hexes (offset by 37.5px)
+            { x: 26, y: 75 },
+            { x: 124, y: 75 },
+            { x: 221, y: 75 },
+            { x: 319, y: 75 },
+            
+            // Row 2 - 5 hexes (no offset)
+            { x: -23, y: 150 },
+            { x: 75, y: 150 },
+            { x: 173, y: 150 },
+            { x: 270, y: 150 },
+            { x: 367, y: 150 },
+            
+            // Row 3 - 4 hexes (offset by 37.5px)
+            { x: 26, y: 225 },
+            { x: 124, y: 225 },
+            { x: 221, y: 225 },
+            { x: 319, y: 225 },
+            
+            // Row 4 - 3 hexes (offset by 75px)
+            { x: 75, y: 300 },
+            { x: 173, y: 300 },
+            { x: 270, y: 300 }
+        ];
+
+        // Initialize tiles with default resources
+        const tiles = hexPositions.map(() => ({
+            currentResource: 'wood',
+            resourceIndex: 0
+        }));
+
+        const board = document.getElementById('board');
+
+        function createHex(pos, index) {
+            const hex = document.createElement('div');
+            hex.className = 'hex';
+            hex.style.left = `${pos.x}px`;
+            hex.style.top = `${pos.y}px`;
+            
+            const hexInner = document.createElement('div');
+            hexInner.className = `hex-inner resource-${tiles[index].currentResource}`;
+            
+            const icon = document.createElement('div');
+            icon.className = 'resource-icon';
+            icon.textContent = resourceIcons[tiles[index].currentResource];
+            hexInner.appendChild(icon);
+            
+            hex.appendChild(hexInner);
+            
+            // Click handler to cycle through resources
+            hex.addEventListener('click', () => {
+                tiles[index].resourceIndex = (tiles[index].resourceIndex + 1) % resources.length;
+                tiles[index].currentResource = resources[tiles[index].resourceIndex];
+                
+                hexInner.className = `hex-inner resource-${tiles[index].currentResource}`;
+                icon.textContent = resourceIcons[tiles[index].currentResource];
+            });
+            
+            return hex;
+        }
+
+        // Render all hexagons
+        hexPositions.forEach((pos, i) => {
+            board.appendChild(createHex(pos, i));
+        });
+    </script>
+</body>
+</html>
