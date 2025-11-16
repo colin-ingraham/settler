@@ -2,13 +2,14 @@
 
 An intelligent web application that helps Settlers of Catan players make optimal settlement placement decisions during the initial draft phase.
 
+Created by Colin Ingraham, Josh Schmitt, and Sam Coehlo for GateHacks 2025
 ## Features
 
-- 🎲 Interactive board setup with customizable resource placement
-- 🧮 AI-powered settlement scoring algorithm
-- 📊 Real-time strategic recommendations
-- 🎯 Visual indicators for optimal placement locations
-- 📈 Post-draft analysis with production metrics
+- Interactive board setup with customizable resource placement
+- Custom settlement scoring algorithm
+- Real-time strategic recommendations
+- Visual indicators for optimal placement locations
+- Post-draft analysis with production metrics
 
 ## Tech Stack
 
@@ -64,7 +65,8 @@ The scoring algorithm considers:
 
 ## Screenshots
 
-[Add screenshots here]
+<img width="1967" height="1307" alt="image" src="https://github.com/user-attachments/assets/c4266937-03e2-4f8b-9898-71f611ae82f3" />
+
 
 ## Future Enhancements
 
@@ -82,4 +84,4 @@ MIT License - feel free to use this for your game nights!
 Pull requests welcome! Please open an issue first to discuss proposed changes.
 
 ---
-Made with ☕ by [Your Name]
+
