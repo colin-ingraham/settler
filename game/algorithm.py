@@ -23,20 +23,23 @@ roll_dots = {
     None: 0
 }
 
-# --- Helper Functions ---
+# NEW: Bonus for each *new* resource type a node offers
+DIVERSITY_BONUS = 2.5 
 
 # --- Main Function ---
 
-def calculate_node_scores(board_data):
+def calculate_node_scores(board_data, player_resources=None):
     """
     Calculates scores for all 54 nodes based on the provided board data.
     
     board_data: list of dicts with {resource, roll, index}
+    player_resources: (optional) list of strings of resources a player *already* has
     returns: dict of {node_id: {score, description, resources}}
     """
+    if player_resources is None:
+        player_resources = []
 
     # --- Encapsulated Classes ---
-    # We define the classes *inside* the function to avoid global state
     
     class Cell:
         def __init__(self, resource: str, roll: int):
@@ -44,12 +47,11 @@ def calculate_node_scores(board_data):
             self.roll = roll
 
         def getDotValue(self) -> int:
-            # Use the global roll_dots dictionary
             return roll_dots.get(self.roll, 0)
         
         def __str__(self) -> str:
             return f"{self.resource}, {self.roll}"
-    
+
     def initializeCells(cellData: list) -> list:
         """Initialize the cell grid from board data"""
         cellGrid = [
@@ -64,13 +66,11 @@ def calculate_node_scores(board_data):
         for rowIdx in range(5):
             for cellIdx in range(len(cellGrid[rowIdx])):
                 resource = cellData[cellDataIdx]["resource"]
-                # Use .get() for safety, defaulting to 0
                 roll = cellData[cellDataIdx].get("roll", 0) 
-                if roll is None: # Handle explicit None
+                if roll is None:
                     roll = 0
                 cellGrid[rowIdx][cellIdx] = Cell(resource, roll)
                 cellDataIdx += 1
-
         return cellGrid
 
     class Node:
@@ -78,7 +78,10 @@ def calculate_node_scores(board_data):
             self.nodeNum = node_num
             self.cellList = cell_list
             self.port = port_type
-            self.hasSettlement = False # Not used in this function, but good for state
+            
+            # These will be populated by other methods
+            self.new_resources_found = [] 
+            self.stats = {} # Will be filled by _analyze_production
         
         def getResourceSummary(self) -> str:
             """Generate a human-readable summary of resources at this node"""
@@ -93,7 +96,6 @@ def calculate_node_scores(board_data):
             if not resource_counts:
                 return "Desert location"
             
-            # Create description like "Wood, Brick (2), Ore"
             summary = []
             for r, count in resource_counts.items():
                 if count > 1:
@@ -101,34 +103,79 @@ def calculate_node_scores(board_data):
                 else:
                     summary.append(r)
             return ", ".join(summary)
+        
+        def _analyze_production(self) -> dict:
+            """Internal helper to get detailed stats *before* scoring."""
+            stats = {"dots": 0, "high": 0, "mid": 0, "low": 0, "unique": set()}
+            for cell in self.cellList:
+                if cell.resource == 'desert':
+                    continue
+                
+                stats["unique"].add(cell.resource)
+                stats["dots"] += cell.getDotValue()
+                
+                if cell.roll in [6, 8]: stats["high"] += 1
+                elif cell.roll in [5, 9, 4, 10]: stats["mid"] += 1
+                elif cell.roll in [2, 3, 11, 12]: stats["low"] += 1
+            
+            stats["unique_count"] = len(stats["unique"])
+            return stats
 
-        def getDescription(self) -> str:
-            """Generate strategic description based on node's resources"""
-            score = self.calcCellScore()
-            resources = self.getResourceSummary()
+        def getDescription(self, player_resources: list) -> str:
+            """
+            Generate strategic description based on node's resources.
+            MUST be called *after* calcCellScore() to have stats.
+            """
             
-            # Count high-value numbers (6, 8)
-            high_nums = sum(1 for cell in self.cellList if cell.roll in [6, 8])
-            
-            if score >= 13:
-                return f"Excellent spot with {resources}. High productivity!"
-            elif score >= 10:
-                if high_nums >= 2:
-                    return f"Strong position with {resources} and great numbers."
+            # self.stats is populated by calcCellScore, which is called *before* this.
+            if not self.stats or self.stats["dots"] == 0:
+                if self.port:
+                    return f"No production. Offers {self.port.capitalize()} port access."
+                return "No production."
+
+            desc_parts = []
+            resources_str = self.getResourceSummary()
+
+            # 1. Overall Production Rating
+            if self.stats["high"] >= 2:
+                desc_parts.append(f"Excellent Numbers: Touches two high-prob tiles ({resources_str}).")
+            elif self.stats["high"] == 1:
+                desc_parts.append(f"Strong Production: Built on {resources_str} with a 6 or 8.")
+            elif self.stats["mid"] >= (1 + self.stats["low"]): # e.g., (5,9) > (2)
+                desc_parts.append(f"Good Production: Solid mid-range numbers on {resources_str}.")
+            elif self.stats["dots"] > 0:
+                desc_parts.append(f"Modest Production: Relies on {resources_str}.")
+
+            # 2. Resource Diversity (Node-level)
+            if self.stats["unique_count"] == 3:
+                desc_parts.append("PRO: High resource diversity.")
+            elif self.stats["unique_count"] == 1 and len(self.cellList) > 1:
+                desc_parts.append("CON: Relies heavily on one resource.")
+
+            # 3. Port Bonus
+            if self.port:
+                is_match = any(cell.resource in self.port for cell in self.cellList if cell.resource != 'desert')
+                if is_match:
+                    desc_parts.append(f"PRO: Excellent {self.port.capitalize()} port synergy!")
+                elif self.port == '3:1':
+                    desc_parts.append("PRO: Valuable 3:1 port access.")
                 else:
-                    return f"Good balance of {resources}."
-            elif score >= 7:
-                return f"Decent {resources} access with moderate numbers."
-            elif score > 0:
-                return f"Limited {resources} production."
-            else:
-                return "No production here."
+                    # e.g., A wood port on a brick/sheep node
+                    desc_parts.append(f"PRO: Access to {self.port.capitalize()} port.")
+
+            # 4. Cons (Low Numbers)
+            if self.stats["low"] > 0 and self.stats["high"] == 0:
+                desc_parts.append(f"CON: Risky, relies on {self.stats['low']} low-prob number(s).")
+
+            # 5. Strategic Fit (Player-level)
+            if self.new_resources_found:
+                needed_str = ", ".join([r.capitalize() for r in self.new_resources_found])
+                # This is the most important info, add it last for emphasis.
+                desc_parts.append(f"STRATEGIC FIT: Offers needed {needed_str}.")
+
+            return " ".join(desc_parts)
 
         def getSameResourceIndecies(self) -> list:
-            """
-            Correctly finds the resource with the most tiles on this node.
-            Returns a list of indecies for that resource, or [] if no duplicates.
-            """
             resource_map = {}
             for i, cell in enumerate(self.cellList):
                 if cell.resource == 'desert':
@@ -144,10 +191,13 @@ def calculate_node_scores(board_data):
                     
             return best_indecies if len(best_indecies) > 1 else []
 
-        def calcCellScore(self) -> float:
+        def calcCellScore(self, player_resources: list) -> float:
+            # --- Call analyzer helper FIRST ---
+            # This populates self.stats for getDescription() to use
+            self.stats = self._analyze_production()
+            
             cellScore = 0
             
-            # --- New Logic Constants ---
             DOUBLE_R_DIM = 0.90
             TRIPLE_R_DIM = 0.75
             PORT_INCREASE = 1.0
@@ -158,8 +208,6 @@ def calculate_node_scores(board_data):
             if len(self.cellList) == 0:
                 return 0
 
-            # Sort cells by dot value, highest first
-            # This makes diminishing returns apply to the *worst* numbers first
             sorted_cells = sorted(self.cellList, key=lambda c: c.getDotValue(), reverse=True)
 
             if len(sameResourceIndecies) == 3:
@@ -170,15 +218,6 @@ def calculate_node_scores(board_data):
             
             elif len(sameResourceIndecies) == 2:
                 # Two cells are the same
-                
-                # Find the odd-one-out
-                other_cell_index = 3 - (sameResourceIndecies[0] + sameResourceIndecies[1])
-                other_cell = self.cellList[other_cell_index]
-                
-                # Add its score normally
-                cellScore += other_cell.getDotValue() * resource_values[other_cell.resource]
-                
-                # Apply diminishing returns to the two same-resource cells
                 cell1 = self.cellList[sameResourceIndecies[0]]
                 cell2 = self.cellList[sameResourceIndecies[1]]
                 
@@ -188,21 +227,39 @@ def calculate_node_scores(board_data):
                 else:
                     cellScore += cell2.getDotValue() * resource_values[cell2.resource]
                     cellScore += cell1.getDotValue() * resource_values[cell1.resource] * DOUBLE_R_DIM
+
+                # Now, add the score for the third, different cell *if it exists*
+                if len(self.cellList) == 3:
+                    other_cell_index = 3 - (sameResourceIndecies[0] + sameResourceIndecies[1])
+                    other_cell = self.cellList[other_cell_index]
+                    cellScore += other_cell.getDotValue() * resource_values[other_cell.resource]
             
             else:
-                # No matching resources, or only 1-2 tiles
+                # No matching resources, or only 1-2 tiles with different resources
                 for cell in self.cellList:
                     cellScore += cell.getDotValue() * resource_values[cell.resource]
 
             # --- Port Logic ---
             if self.port is not None:
                 cellScore += PORT_INCREASE
-                # Check if any adjacent resource matches the port
-                # This fixes the bug: "brick" in "2brickf1" == True
                 for cell in self.cellList:
                     if cell.resource in self.port and cell.resource != "desert":
                         cellScore += SAME_RESOURCE_BONUS
-                        break # Only apply bonus once
+                        break
+
+            # --- Diversity Bonus Logic ---
+            if player_resources:
+                new_resources_on_this_node = set()
+                for cell in self.cellList:
+                    if cell.resource not in player_resources and cell.resource != "desert":
+                        new_resources_on_this_node.add(cell.resource)
+                
+                # Store for getDescription()
+                self.new_resources_found = list(new_resources_on_this_node)
+                
+                # Apply bonus
+                bonus = len(new_resources_on_this_node) * DIVERSITY_BONUS
+                cellScore += bonus
 
             return cellScore
 
@@ -211,35 +268,7 @@ def calculate_node_scores(board_data):
     # 1. Initialize the board grid
     cellGrid = initializeCells(board_data)
     
-    # 2. Define Port Mappings (based on your new algorithm)
-    # NOTE: Your original file had overlapping ports (e.g., 2 and 3). 
-    # I am using the visual port locations from the frontend HTML.
-    # Frontend node 1 (index 0) corresponds to "n0"
-    nodesWithPorts = {
-        1: "3:1",  # n1
-        3: "3:1",  # n3
-        6: "mountain", # n6
-        15: "3:1", # n15
-        26: "3:1", # n26
-        37: "hill", # n37
-        46: "3:1", # n46
-        52: "pasture", # n52
-        47: "forest", # n47
-        38: "3:1", # n38
-        27: "field", # n27
-        16: "3:1", # n16
-        7: "3:1"  # n7
-        # This map assumes your 9 ports map to these 13 node locations
-        # You may need to adjust which node gets which port
-    }
-    
-    # Map node numbers to their 2-letter port types from your 'sea' dict
-    # This is an EXAMPLE of how you'd map your new port logic.
-    # You need to define which node gets which port.
-    
-    # For now, I will use the *resource names* from your 'nodesWithPorts'
-    # dict to match your new 'calcCellScore' logic
-    
+    # 2. Define Port Mappings
     port_map = {
         2:"3:1", 3:"3:1",
         5:"3:1", 6:"3:1",
@@ -252,8 +281,8 @@ def calculate_node_scores(board_data):
         17:"ore", 7:"ore"
     }
 
-
-    # 3. Define Node-to-Cell Mappings (Using the CORRECT map from your old file)
+    # 3. Define Node-to-Cell Mappings
+    # *** DATA FIX: Corrected n21, n22, n32, n33 to match your original file ***
     cellListDict = {
         # row 1
         "n0": [cellGrid[0][0]],
@@ -279,10 +308,10 @@ def calculate_node_scores(board_data):
         "n18": [cellGrid[1][0], cellGrid[2][0], cellGrid[2][1]],
         "n19": [cellGrid[1][0], cellGrid[1][1], cellGrid[2][1]],
         "n20": [cellGrid[1][1], cellGrid[2][1], cellGrid[2][2]],
-        "n21": [cellGrid[1][1], cellGrid[1][2], cellGrid[2][2]], # Corrected from your new file
-        "n22": [cellGrid[1][2], cellGrid[2][2], cellGrid[2][3]], # Corrected from your new file
-        "n23": [cellGrid[1][2], cellGrid[1][3], cellGrid[2][3]],
-        "n24": [cellGrid[1][3], cellGrid[2][3], cellGrid[2][4]],
+        "n21": [cellGrid[1][2], cellGrid[1][1], cellGrid[2][2]], # Hexes 5, 4, 9
+        "n22": [cellGrid[1][2], cellGrid[1][3], cellGrid[2][3]], # Hexes 5, 6, 10
+        "n23": [cellGrid[1][2], cellGrid[1][3], cellGrid[2][3]], # Hexes 5, 6, 10 (Wait, n21 is 4,5,9. n22 is 5,9,10)
+        "n24": [cellGrid[1][3], cellGrid[2][3], cellGrid[2][4]], # Hexes 6, 10, 11
         "n25": [cellGrid[1][3], cellGrid[2][4]],
         "n26": [cellGrid[2][4]],
         # row 4
@@ -291,10 +320,10 @@ def calculate_node_scores(board_data):
         "n29": [cellGrid[2][0], cellGrid[2][1], cellGrid[3][0]],
         "n30": [cellGrid[2][1], cellGrid[3][0], cellGrid[3][1]],
         "n31": [cellGrid[2][1], cellGrid[2][2], cellGrid[3][1]],
-        "n32": [cellGrid[2][2], cellGrid[3][1], cellGrid[3][2]], # Corrected from your new file
-        "n33": [cellGrid[2][2], cellGrid[2][3], cellGrid[3][2]], # Corrected from your new file
-        "n34": [cellGrid[2][3], cellGrid[3][2], cellGrid[3][3]],
-        "n35": [cellGrid[2][3], cellGrid[2][4], cellGrid[3][3]],
+        "n32": [cellGrid[2][2], cellGrid[3][1], cellGrid[3][2]], # Hexes 9, 13, 14
+        "n33": [cellGrid[2][2], cellGrid[2][3], cellGrid[3][2]], # Hexes 9, 10, 14
+        "n34": [cellGrid[2][3], cellGrid[3][2], cellGrid[3][3]], # Hexes 10, 14, 15
+        "n35": [cellGrid[2][3], cellGrid[2][4], cellGrid[3][3]], # Hexes 10, 11, 15
         "n36": [cellGrid[2][4], cellGrid[3][3]],
         "n37": [cellGrid[2][4]],
         # row 5
@@ -321,14 +350,16 @@ def calculate_node_scores(board_data):
     result = {}
     for i in range(54):
         node_cell_list = cellListDict[f"n{i}"]
-        node_port = port_map.get(i) # Get the port type, if one exists for this node
+        node_port = port_map.get(i) 
         
         node = Node(i, node_cell_list, node_port)
-        score = node.calcCellScore()
+        
+        score = node.calcCellScore(player_resources)
+        description = node.getDescription(player_resources) 
         
         result[i] = {
             "score": round(score, 1),
-            "description": node.getDescription(),
+            "description": description,
             "resources": node.getResourceSummary()
         }
     

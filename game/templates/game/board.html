@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settler - Game Setup</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -475,25 +476,24 @@
 
         /* --- Node Tooltip Styles --- */
         .node-tooltip {
-            position: absolute;
             background: 
                 linear-gradient(135deg, rgba(245, 235, 215, 0.98) 0%, rgba(232, 215, 195, 0.98) 100%);
             border: 2px solid #8B6F47;
             border-radius: 8px;
-            padding: 12px 16px;
+            padding: 16px;
             color: #3E2723;
             font-size: 13px;
-            pointer-events: none;
-            z-index: 1000;
             box-shadow: 
                 0 4px 12px rgba(0, 0, 0, 0.4),
                 inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            display: none;
-            min-width: 180px;
+            margin-top: 15px; /* Space below player list */
+            min-height: 200px; /* Prevent collapse */
+            opacity: 0.5; /* Dimmed when nothing hovered */
+            transition: opacity 0.3s ease;
         }
 
         .node-tooltip.visible {
-            display: block;
+            opacity: 1; /* Full brightness when hovering */
         }
 
         .tooltip-score {
@@ -669,12 +669,13 @@
         }
 
         #summary-cards-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
             justify-content: center;
             margin-bottom: 30px;
+            max-width: 1000px; /* Limits how wide the grid gets */
+            width: 100%;
         }
 
         .summary-card {
@@ -683,12 +684,17 @@
                 linear-gradient(180deg, #F5E6D3 0%, #E8D7C3 100%);
             border-radius: 12px;
             padding: 20px;
-            width: 220px;
+            width: 100%; /* Changed from fixed 220px */
             box-shadow: 
                 0 10px 30px rgba(0, 0, 0, 0.5),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
             border: 3px solid #8B6F47;
             position: relative;
+            opacity: 0;
+            animation: slideInUp 0.6s ease forwards;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%; /* Makes all cards stretch to match tallest */
         }
         
         .summary-card::before {
@@ -728,7 +734,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: auto;
         }
 
         .stat-item {
@@ -749,6 +755,7 @@
 
         .win-percentage {
             text-align: center;
+            margin-top: auto;
         }
 
         .win-percentage .stat-label {
@@ -775,6 +782,14 @@
             background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
             border-color: #d97706;
             animation: pulse-yellow 2s ease-in-out infinite;
+        }
+        @keyframes settlement-drop {
+            0% { transform: translate(-50%, -200%) scale(0.5); }
+            60% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+        .settlement-node.placed .settlement-house {
+            animation: settlement-drop 0.4s ease-out;
         }
 
         .settlement-node.score-low {
@@ -881,6 +896,230 @@
         .settlement-node.score-best:hover::after {
             font-size: 16px;  /* Changed from 12px */
         }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .summary-card {
+            opacity: 0;
+            animation: slideInUp 0.6s ease forwards;
+        }
+        .strategy-recommendation {
+            margin-top: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(124, 179, 66, 0.15) 0%, rgba(104, 159, 56, 0.15) 100%);
+            border: 2px solid #7CB342;
+            border-radius: 8px;
+        }
+
+        .strategy-recommendation h4 {
+            font-size: 13px;
+            color: #558B2F;
+            margin-bottom: 6px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .strategy-recommendation h4::before {
+            content: '💡';
+            font-size: 16px;
+        }
+
+        .strategy-text {
+            font-size: 12px;
+            color: #33691E;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        /* Resource Breakdown */
+        .resource-breakdown {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #8B6F47;
+        }
+
+        .resource-breakdown h4 {
+            font-size: 13px;
+            color: #5D4037;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .resource-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .resource-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .resource-icon-small {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 900;
+            color: white;
+        }
+
+        .resource-value {
+            font-weight: 700;
+            color: #8B6F47;
+        }
+
+
+
+        /* --- Node Tooltip Styles --- */
+        .node-tooltip {
+            /* (Your existing .node-tooltip styles are fine) */
+            position: absolute;
+            background: 
+                linear-gradient(135deg, rgba(245, 235, 215, 0.98) 0%, rgba(232, 215, 195, 0.98) 100%);
+            border: 2px solid #8B6F47;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #3E2723;
+            font-size: 13px;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            display: none;
+            width: 280px; /* Widen the tooltip */
+        }
+
+        .node-tooltip.visible {
+            display: block;
+        }
+
+        /* --- 1. Score Bar Styles --- */
+        .tooltip-score-container {
+            margin-bottom: 12px;
+        }
+        .tooltip-score-label {
+            font-weight: 700;
+            font-size: 16px;
+            color: #5D4037;
+            margin-bottom: 6px;
+        }
+        #tooltipScoreValue {
+            color: #3E2723;
+        }
+        .score-bar-bg {
+            width: 100%;
+            height: 12px;
+            background: #E8D7C3;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #8B6F47;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .score-bar-fg {
+            height: 100%;
+            background: linear-gradient(135deg, #7CB342 0%, #689F38 100%);
+            border-radius: 6px;
+            width: 0%; /* JS will set this */
+            transition: width 0.3s ease;
+        }
+
+        /* --- 2. Resource Pip Styles --- */
+        .tooltip-resources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(139, 111, 71, 0.3);
+        }
+        .resource-pip {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(0,0,0,0.5);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.7);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        /* Match your hex colors */
+        .resource-pip.wood { background-color: #16a34a; }
+        .resource-pip.brick { background-color: #dc2626; }
+        .resource-pip.sheep { background-color: #84cc16; }
+        .resource-pip.wheat { background-color: #eab308; }
+        .resource-pip.ore { background-color: #71717a; }
+
+        /* --- 3. Pros/Cons List Styles --- */
+        .tooltip-analysis {
+            font-size: 13px;
+            color: #4E342E;
+            line-height: 1.5;
+        }
+        .analysis-item {
+            display: block;
+            margin-bottom: 5px;
+            padding-left: 22px;
+            position: relative;
+        }
+        .analysis-item::before {
+            position: absolute;
+            left: 0;
+            top: 1px;
+            font-weight: 900;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        .analysis-item.pro::before {
+            content: '[+]';
+            color: #22c55e;
+        }
+        .analysis-item.con::before {
+            content: '[-]';
+            color: #ef4444;
+        }
+        .analysis-item.info::before {
+            content: '•';
+            color: #8B6F47;
+            font-size: 18px;
+            top: -1px; /* Align bullet */
+        }
+
+        /* --- 4. Strategic Fit Styles --- */
+        .tooltip-fit {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            border-radius: 6px;
+            color: #a16207; /* Darker yellow/orange */
+            font-weight: 700;
+            font-size: 13px;
+            line-height: 1.4;
+            display: none; /* Hidden by default */
+        }
     </style>
 </head>
 <body>
@@ -935,10 +1174,6 @@
 
             <div class="board-container">
                 <div class="board" id="board"></div>
-                <div class="node-tooltip" id="nodeTooltip">
-                    <div class="tooltip-score" id="tooltipScore">Score: 8.5/10</div>
-                    <div class="tooltip-description" id="tooltipDescription">Strong wheat/ore position with good number diversity</div>
-                </div>
             </div>
 
             <div class="instructions" id="instructions">
@@ -954,7 +1189,21 @@
         <div class="player-sidebar" id="player-sidebar">
             <h3>PLAYERS</h3>
             <div id="player-list">
+            </div>
+            
+            <div class="node-tooltip" id="nodeTooltip">
+                <div class="tooltip-score-container">
+                    <div class="tooltip-score-label">
+                        Production Score: <span id="tooltipScoreValue">0</span>
+                    </div>
+                    <div class="score-bar-bg">
+                        <div class="score-bar-fg" id="tooltipScoreBar"></div>
+                    </div>
                 </div>
+                <div class="tooltip-resources" id="tooltipResources"></div>
+                <div class="tooltip-analysis" id="tooltipAnalysis"></div>
+                <div class="tooltip-fit" id="tooltipFit"></div>
+            </div>
         </div>
     </div>
 
@@ -977,8 +1226,12 @@
         let placementOrder = [];
         let currentPlacementTurn = 0;
         
+        let nodeScores = {}; 
+        let globalBoardData = []; // To send back to the API
+        let playerResourceMap = {}; // Stores first-pick resources, e.g., {0: ['ore', 'wheat']}
+        let playerSecondPickCalculated = {};
+        let initialNodeScores = {}; // Tracks if we've re-fetched scores, e.g., {0: true}
         // Store node scores from algorithm
-        let nodeScores = {};
         
         const playerColors = [
             "#EF4444", // Red
@@ -1195,33 +1448,36 @@
         
         // --- API Integration ---
         
-        async function fetchNodeScores() {
-            const boardData = tiles.map((tile, index) => ({
-                resource: tile.resource,
-                roll: tile.number,
-                index: index
-            }));
-            
+        async function fetchNodeScores(playerResources = null) {
+            const payload = { 
+                board_data: globalBoardData // Always use the global board data
+            };
+
+            if (playerResources) {
+                payload.player_resources = playerResources;
+                console.log("Re-fetching scores with player resources:", playerResources);
+            } else {
+                console.log("Fetching initial scores...");
+            }
+
             try {
-                const response = await fetch('/api/calculate-scores/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        board_data: boardData
-                    })
-                });
+            const response = await fetch('/api/calculate-scores/', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            // Include CSRF token if you're using Django's CSRF protection
+            },
+            body: JSON.stringify(payload) // Send the dynamic payload
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                nodeScores = data.scores; // Update the global scores
+                console.log('Node scores loaded:', nodeScores);
+            } else {
                 
-                const data = await response.json();
-                
-                if (data.success) {
-                    nodeScores = data.scores;
-                    console.log('Node scores loaded:', nodeScores);
-                    applyNodeScoreColors();
-                } else {
-                    console.error('Failed to load scores:', data.error);
-                }
+            }
             } catch (error) {
                 console.error('Error fetching scores:', error);
             }
@@ -1327,7 +1583,7 @@
                 node.classList.add('score-best');
                 });
         }
-        
+
         // --- Board & Draft JS ---
 
         function createHex(pos, index) {
@@ -1414,51 +1670,109 @@
             node.title = `Settlement Node ${id}`;
             node.addEventListener('click', () => handleNodeClick(node, id));
             
-            node.addEventListener('mouseenter', (e) => showNodeTooltip(e, id, pos));
+            node.addEventListener('mouseenter', (e) => showNodeTooltip(e, id));
             node.addEventListener('mouseleave', hideNodeTooltip);
             
             return node;
         }
 
-        function showNodeTooltip(event, nodeId, nodePos) {
+        function showNodeTooltip(event, nodeId) {
             if (currentStep !== 3) return;
             
             const node = event.target;
             if (node.classList.contains('placed') || node.classList.contains('disabled')) return;
             
+            // Get all the new tooltip elements
             const tooltip = document.getElementById('nodeTooltip');
-            const tooltipScore = document.getElementById('tooltipScore');
-            const tooltipDescription = document.getElementById('tooltipDescription');
+            const scoreValueEl = document.getElementById('tooltipScoreValue');
+            const scoreBarEl = document.getElementById('tooltipScoreBar');
+            const resourcesEl = document.getElementById('tooltipResources');
+            const analysisEl = document.getElementById('tooltipAnalysis');
+            const fitEl = document.getElementById('tooltipFit');
             
-            // Map visual node ID to algorithm node ID
+            // Clear old content
+            resourcesEl.innerHTML = '';
+            analysisEl.innerHTML = '';
+            fitEl.innerHTML = '';
+            fitEl.style.display = 'none'; // Hide by default
+            
             const algorithmNodeId = nodeId - 1;
             
             if (nodeScores && nodeScores[algorithmNodeId]) {
                 const nodeData = nodeScores[algorithmNodeId];
                 
-                // Check if this is a best spot
-                if (node.classList.contains('score-best')) {
-                    tooltipScore.textContent = `⭐ BEST SPOT! Score: ${nodeData.score}/15 ⭐`;
-                    tooltipScore.style.color = '#f59e0b';
-                    tooltipScore.style.fontSize = '18px';
-                } else {
-                    tooltipScore.textContent = `Score: ${nodeData.score}/15`;
-                    tooltipScore.style.color = '#8B6F47';
-                    tooltipScore.style.fontSize = '16px';
+                // 1. Set Score
+                const MAX_SCORE = 18; // Assumed max score for bar percentage
+                const score = nodeData.score;
+                scoreValueEl.textContent = score;
+                const scorePercent = Math.min((score / MAX_SCORE) * 100, 100);
+                scoreBarEl.style.width = `${scorePercent}%`;
+
+                // 2. Set Resource Pips
+                // "Ore, Wheat (x2)" -> ["Ore", "Wheat (x2)"]
+                const resourceParts = nodeData.resources.split(', ');
+                if (resourceParts[0] !== 'Desert location') {
+                    resourceParts.forEach(part => {
+                        // "Wheat (x2)" -> ["Wheat", "x2)"]
+                        const details = part.split(' (');
+                        const resourceName = details[0].toLowerCase(); // "wheat"
+                        const count = details[1] ? parseInt(details[1].replace(/\D/g, '')) : 1;
+                        
+                        for (let i = 0; i < count; i++) {
+                            const pip = document.createElement('div');
+                            pip.className = `resource-pip ${resourceName}`;
+                            // Use 'W', 'B', 'S', 'O', 'H' (for Brick/Hill)
+                            let initial = resourceName.substring(0, 1).toUpperCase();
+                            if (resourceName === 'brick') initial = 'B'; 
+                            if (resourceName === 'sheep') initial = 'S'; 
+                            
+                            pip.textContent = initial;
+                            resourcesEl.appendChild(pip);
+                        }
+                    });
                 }
+
+                // 3. Parse and Set Analysis
+                const description = nodeData.description;
+                // "Excellent... PRO: ... CON: ... STRATEGIC FIT: ..."
+                const sentences = description.split('. ');
+                let fitText = '';
                 
-                tooltipDescription.textContent = nodeData.description;
+                sentences.forEach(sentence => {
+                    const item = document.createElement('span');
+                    item.className = 'analysis-item';
+                    
+                    if (sentence.startsWith('PRO:')) {
+                        item.classList.add('pro');
+                        item.textContent = sentence.substring(5); // Remove "PRO: "
+                        analysisEl.appendChild(item);
+                    } else if (sentence.startsWith('CON:')) {
+                        item.classList.add('con');
+                        item.textContent = sentence.substring(5); // Remove "CON: "
+                        analysisEl.appendChild(item);
+                    } else if (sentence.startsWith('STRATEGIC FIT:')) {
+                        fitText = sentence.substring(15); // Remove "STRATEGIC FIT: "
+                    } else if (sentence.length > 1) { // Avoid empty strings
+                        item.classList.add('info');
+                        item.textContent = sentence.endsWith('.') ? sentence : sentence + '.';
+                        analysisEl.appendChild(item);
+                    }
+                });
+
+                // 4. Set Strategic Fit
+                if (fitText) {
+                    fitEl.textContent = fitText;
+                    fitEl.style.display = 'block';
+                }
+
             } else {
                 // Fallback
-                tooltipScore.textContent = `Score: ${(Math.random() * 3 + 7).toFixed(1)}/10`;
-                tooltipScore.style.color = '#8B6F47';
-                tooltipScore.style.fontSize = '16px';
-                tooltipDescription.textContent = 'Loading...';
+                scoreValueEl.textContent = '...';
+                scoreBarEl.style.width = '0%';
+                analysisEl.textContent = 'Loading...';
             }
-            
-            tooltip.style.left = `${nodePos.x + 25}px`;
-            tooltip.style.top = `${nodePos.y - 10}px`;
-            
+    
+
             tooltip.classList.add('visible');
         }
 
@@ -1467,7 +1781,7 @@
             tooltip.classList.remove('visible');
         }
 
-        function handleNodeClick(node, id) {
+        async function handleNodeClick(node, id) {
             // Check if node is disabled or already placed
             if (node.classList.contains('placed') || node.classList.contains('disabled')) {
                 console.log('Node unavailable');
@@ -1481,6 +1795,19 @@
             const playerIndex = placementOrder[currentPlacementTurn];
             const player = players[playerIndex];
             console.log(`Node ${id} clicked by ${player.name}`);
+
+            // --- NEW: Store first-pick resources ---
+            const algorithmNodeId = id - 1;
+            if (!playerResourceMap[playerIndex]) { // If this is the player's first pick
+                const resourceString = nodeScores[algorithmNodeId].resources;
+                // "Ore, Wood (x2)" -> ["ore", "wood"]
+                playerResourceMap[playerIndex] = resourceString
+                    .toLowerCase()
+                    .split(', ')
+                    .map(r => r.split(' (x')[0]) // "wood (x2)" -> "wood"
+                    .filter(r => r !== 'desert' && r !== 'desert location');
+                console.log(`Player ${playerIndex} first pick resources:`, playerResourceMap[playerIndex]);
+            }
 
             const house = document.createElement('div');
             house.className = 'settlement-house';
@@ -1503,9 +1830,8 @@
             
             // Disable adjacent nodes (settlement spacing rule)
             disableAdjacentNodes(id - 1); // id is 1-indexed, need 0-indexed
-            updateBestSpots();
             currentPlacementTurn++;
-            updateTurnIndicator();
+            await updateTurnIndicator();
         }
 
         function populateSidebar() {
@@ -1531,7 +1857,7 @@
             });
         }
 
-        function updateTurnIndicator() {
+        async function updateTurnIndicator() {
             const instructions = document.getElementById('instructions');
             document.querySelectorAll('.player-card').forEach(card => {
                 card.classList.remove('active');
@@ -1539,7 +1865,7 @@
 
             if (currentPlacementTurn >= placementOrder.length) {
                 instructions.innerHTML = 'Settlement draft complete!';
-                
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                 setTimeout(() => {
                     document.getElementById('game-screen').style.display = 'none';
                     generateDraftSummary();
@@ -1552,43 +1878,205 @@
             const nextPlayerIndex = placementOrder[currentPlacementTurn];
             const nextPlayer = players[nextPlayerIndex];
 
+            const isSecondPick = !!playerResourceMap[nextPlayerIndex];
+            if (isSecondPick && !playerSecondPickCalculated[nextPlayerIndex]) {
+                console.log(`Calculating 2nd pick scores for ${nextPlayer.name}...`);
+                // Await the new scores
+                await fetchNodeScores(playerResourceMap[nextPlayerIndex]);
+                // Mark as calculated so we don't re-fetch again
+                playerSecondPickCalculated[nextPlayerIndex] = true;
+                // Re-apply all node colors based on new scores
+                applyNodeScoreColors(); 
+            }
+
             document.getElementById(`player-card-${nextPlayerIndex}`).classList.add('active');
             instructions.innerHTML = `<span style="color:${nextPlayer.color}; text-shadow: 0 0 2px #000;">${nextPlayer.name}</span>, place your settlement.`;
+
+            updateBestSpots();
         }
         
         function generateDraftSummary() {
             const container = document.getElementById('summary-cards-container');
             container.innerHTML = ''; 
 
-            players.forEach(player => {
-                const totalPips = Math.floor(Math.random() * 10) + 5; 
-                const resourceAccess = (Math.random() > 0.3) ? "5/5" : "4/5";
-                const winPercentage = Math.floor(Math.random() * 20) + 20; 
+            // Calculate total score for all placed settlements
+            let totalPlacedScore = 0;
+            const allPlacedNodes = document.querySelectorAll('.settlement-node.placed');
+            
+            allPlacedNodes.forEach(node => {
+                const algorithmNodeId = parseInt(node.id.split('-')[1]) - 1;
+                if (initialNodeScores[algorithmNodeId]) {
+                    totalPlacedScore += initialNodeScores[algorithmNodeId].score;
+                }
+            });
 
-                const cardHTML = `
-                    <div class="summary-card">
-                        <div class="summary-card-header">
-                            <div class="player-color-swatch" style="background: ${player.color};"></div>
-                            <div class="player-name">${player.name}</div>
-                        </div>
-                        <div class="summary-stats">
-                            <div class="stat-item">
-                                <span class="stat-label">Total Pips</span>
-                                <span class="stat-value">${totalPips}</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Resource Access</span>
-                                <span class="stat-value">${resourceAccess}</span>
-                            </div>
-                        </div>
-                        <div class="win-percentage">
-                            <div class="stat-label">Probable Win %</div>
-                            <div class="stat-value">${winPercentage}%</div>
-                        </div>
+            // Loop through each player in original order (no sorting)
+            players.forEach((player, playerIndex) => {
+                const playerNodes = document.querySelectorAll(`.settlement-node.placed[data-owner="${playerIndex}"]`);
+                
+                let playerRawScore = 0;
+                const resourceSet = new Set();
+                const resourceProduction = { wood: 0, brick: 0, sheep: 0, wheat: 0, ore: 0 };
+                
+                // Resource tracking for strategy algorithm
+                const resourceDotScores = { wood: 0, brick: 0, sheep: 0, wheat: 0, ore: 0 };
+                const resourceCounts = { wood: 0, brick: 0, sheep: 0, wheat: 0, ore: 0 };
+
+                playerNodes.forEach(node => {
+                    const algorithmNodeId = parseInt(node.id.split('-')[1]) - 1;
+                    if (initialNodeScores[algorithmNodeId]) {
+                        const nodeData = initialNodeScores[algorithmNodeId];
+                        playerRawScore += nodeData.score;
+                        
+                        // Get adjacent hexes and calculate production + strategy scores
+                        const adjacentHexes = getAdjacentHexesForNode(algorithmNodeId);
+                        adjacentHexes.forEach(hexIdx => {
+                            if (hexIdx !== null && tiles[hexIdx]) {
+                                const resource = tiles[hexIdx].resource;
+                                const roll = tiles[hexIdx].number;
+                                if (resource !== 'desert' && roll) {
+                                    const dotValue = {2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1}[roll] || 0;
+                                    const probability = {2: 1/36, 3: 2/36, 4: 3/36, 5: 4/36, 6: 5/36, 
+                                                    8: 5/36, 9: 4/36, 10: 3/36, 11: 2/36, 12: 1/36}[roll] || 0;
+                                    
+                                    resourceProduction[resource] += probability;
+                                    resourceSet.add(resource);
+                                    resourceCounts[resource]++;
+                                    
+                                    // Track highest dot value for each resource
+                                    if (dotValue > resourceDotScores[resource]) {
+                                        resourceDotScores[resource] = dotValue;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+                // Calculate strategy scores: highest dot value + 1 for each extra instance
+                const strategyScores = {};
+                Object.keys(resourceDotScores).forEach(resource => {
+                    if (resourceCounts[resource] > 0) {
+                        strategyScores[resource] = resourceDotScores[resource] + (resourceCounts[resource] - 1);
+                    } else {
+                        strategyScores[resource] = 0;
+                    }
+                });
+
+                console.log(`${player.name} strategy scores:`, strategyScores);
+
+                // Determine recommended strategy
+                let recommendedStrategy = "";
+                
+                if (strategyScores.ore >= 4 && strategyScores.wheat >= 4) {
+                    recommendedStrategy = "🏙️ City Development - Focus on upgrading settlements to cities early. Your strong ore and wheat production will fuel rapid development.";
+                } else if (strategyScores.wood >= 3 && strategyScores.brick >= 3) {
+                    recommendedStrategy = "🛤️ Longest Road - Build roads aggressively to claim the longest road bonus. Your wood and brick give you a clear advantage.";
+                } else if (strategyScores.sheep >= 3 && strategyScores.wheat >= 3 && strategyScores.ore >= 3) {
+                    recommendedStrategy = "🎴 Development Cards - Buy development cards frequently. Your balanced sheep/wheat/ore access lets you control the game through knights and progress cards.";
+                } else if (Object.values(strategyScores).every(score => score >= 3)) {
+                    recommendedStrategy = "🏘️ Settlement Expansion - Your balanced resource production allows flexible expansion. Build new settlements to dominate multiple areas of the board.";
+                } else {
+                    // Fallback: recommend trading
+                    const strongestResource = Object.entries(strategyScores).sort((a, b) => b[1] - a[1])[0];
+                    recommendedStrategy = `🤝 Trade Strategy - Focus on trading your surplus ${strongestResource[0]} for resources you lack. Build a trading network with other players.`;
+                }
+
+                // Calculate stats
+                const totalPips = playerRawScore.toFixed(1);
+                const resourceAccess = `${resourceSet.size}/5`;
+                const winPercentage = (totalPlacedScore > 0) 
+                    ? Math.round((playerRawScore / totalPlacedScore) * 100)
+                    : 0;
+
+                // Create card element (no animation delay, no ranking)
+                const card = document.createElement('div');
+                card.className = 'summary-card';
+                card.style.animationDelay = `${playerIndex * 0.15}s`;
+
+                // Resource breakdown
+                const resourceBreakdownHTML = `
+                    <div class="resource-breakdown">
+                        <h4>Resources/Turn (Expected)</h4>
+                        ${Object.entries(resourceProduction)
+                            .filter(([res, val]) => val > 0)
+                            .sort((a, b) => b[1] - a[1])
+                            .map(([res, val]) => `
+                                <div class="resource-row">
+                                    <div class="resource-label">
+                                        <div class="resource-icon-small resource-pip ${res}">
+                                            ${res[0].toUpperCase()}
+                                        </div>
+                                        <span>${res.charAt(0).toUpperCase() + res.slice(1)}</span>
+                                    </div>
+                                    <span class="resource-value">${val.toFixed(2)}</span>
+                                </div>
+                            `).join('')}
                     </div>
                 `;
-                container.innerHTML += cardHTML;
+
+                // Strategy recommendation
+                const strategyHTML = `
+                    <div class="strategy-recommendation">
+                        <h4>Recommended Strategy</h4>
+                        <div class="strategy-text">${recommendedStrategy}</div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="summary-card-header">
+                        <div class="player-color-swatch" style="background: ${player.color};"></div>
+                        <div class="player-name">${player.name}</div>
+                    </div>
+                    ${resourceBreakdownHTML}
+                    ${strategyHTML}
+                    <div class="summary-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Production</span>
+                            <span class="stat-value">${totalPips}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Resource Access</span>
+                            <span class="stat-value">${resourceAccess}</span>
+                        </div>
+                    </div>
+                    <div class="win-percentage">
+                        <div class="stat-label">Share of Production</div>
+                        <div class="stat-value">${winPercentage}%</div>
+                    </div>
+                `;
+
+                container.appendChild(card);
             });
+        }
+        // Helper function to get adjacent hexes for a node
+        function getAdjacentHexesForNode(nodeId) {
+            // This maps each node to its adjacent hex indices
+            const nodeToHexMap = {
+                // Row 1
+                0: [3, null, null], 1: [0, null, null], 2: [0, 3, null], 3: [1, 0, null], 
+                4: [1, 4, null], 5: [2, 1, null], 6: [2, null, null],
+                // Row 2
+                7: [3, null, null], 8: [3, 0, null], 9: [3, 4, 0], 10: [0, 4, 1],
+                11: [4, 1, 5], 12: [1, 5, 2], 13: [5, 2, 6], 14: [2, 6, null], 15: [6, null, null],
+                // Row 3
+                16: [7, null, null], 17: [7, 3, null], 18: [7, 3, 8], 19: [3, 8, 4],
+                20: [8, 4, 9], 21: [4, 9, 5], 22: [9, 5, 10], 23: [5, 10, 6],
+                24: [10, 6, 11], 25: [6, 11, null], 26: [11, null, null],
+                // Row 4
+                27: [7, null, null], 28: [7, 12, null], 29: [7, 8, 12], 30: [8, 12, 13],
+                31: [8, 9, 13], 32: [9, 13, 14], 33: [9, 10, 14], 34: [10, 14, 15],
+                35: [10, 11, 15], 36: [11, 15, null], 37: [11, null, null],
+                // Row 5
+                38: [12, null, null], 39: [12, 16, null], 40: [12, 13, 16], 41: [13, 16, 17],
+                42: [13, 14, 17], 43: [14, 17, 18], 44: [14, 15, 18], 45: [15, 18, null],
+                46: [15, null, null],
+                // Row 6
+                47: [16, null, null], 48: [16, null, null], 49: [16, 17, null], 50: [17, null, null],
+                51: [17, 18, null], 52: [18, null, null], 53: [18, null, null]
+            };
+            
+            return nodeToHexMap[nodeId] || [];
         }
 
 
@@ -1671,19 +2159,18 @@
         }
 
         async function startAlgorithm() {
-            const boardData = {
-                tiles: tiles.map((tile, index) => ({
-                    index: index,
-                    resource: tile.resource,
-                    number: tile.number,
-                    position: hexPositions[index]
-                }))
-            };
+            globalBoardData = tiles.map((tile, index) => ({
+                index: index,
+                resource: tile.resource,
+                roll: tile.number, // Changed from 'number' to 'roll'
+                position: hexPositions[index]
+            }));
             
-            console.log('Board configuration:', boardData);
+            console.log('Board configuration:', globalBoardData);
             
             // Fetch node scores from the algorithm
             await fetchNodeScores();
+            initialNodeScores = JSON.parse(JSON.stringify(nodeScores));
             
             // Create nodes FIRST
             nodePositions.forEach((pos, i) => {
