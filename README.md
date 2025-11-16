@@ -66,6 +66,7 @@ The scoring algorithm considers:
 ## Screenshots
 
 <img width="1967" height="1307" alt="image" src="https://github.com/user-attachments/assets/c4266937-03e2-4f8b-9898-71f611ae82f3" />
+<img width="1996" height="1100" alt="image" src="https://github.com/user-attachments/assets/5516a799-a300-4bab-b8f3-0d212650e3f5" />
 
 
 ## Future Enhancements
