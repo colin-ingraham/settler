@@ -946,6 +946,9 @@
             margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 2px solid #8B6F47;
+            min-height: 140px; /* Fixed height to align all cards */
+            display: flex;
+            flex-direction: column;
         }
 
         .resource-breakdown h4 {
@@ -953,6 +956,11 @@
             color: #5D4037;
             margin-bottom: 8px;
             font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .resource-breakdown > div:not(h4) {
+            flex-grow: 1; /* Allows content to fill available space */
         }
 
         .resource-row {
