@@ -911,6 +911,24 @@
             opacity: 0;
             animation: slideInUp 0.6s ease forwards;
         }
+
+        @keyframes number-drop {
+            0% { 
+                transform: translate(-50%, -200%) scale(0.3);
+                opacity: 0;
+            }
+            60% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+        .number-token.dropping {
+            animation: number-drop 0.5s ease-out forwards;
+        }
         .strategy-recommendation {
             margin-top: 12px;
             padding: 12px;
@@ -1128,6 +1146,8 @@
             line-height: 1.4;
             display: none; /* Hidden by default */
         }
+
+    
     </style>
 </head>
 <body>
@@ -1222,6 +1242,8 @@
         <div id="summary-cards-container">
             </div>
         <button class="control-button" id="play-again-btn">Play Again</button>
+        <button class="control-button secondary" id="view-board-btn">View Final Board</button>
+
     </div>
 
 
@@ -1397,6 +1419,12 @@
         const board = document.getElementById('board');
 
         // --- Setup Screen JS ---
+        document.getElementById('view-board-btn').addEventListener('click', () => {
+            document.getElementById('draft-summary-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            document.getElementById('instructions').innerHTML = 'Final board state - settlements placed!';
+            document.querySelector('.controls').style.display = 'none';
+        });
         document.addEventListener('DOMContentLoaded', () => {
             const setupScreen = document.getElementById('player-setup-screen');
             const gameScreen = document.getElementById('game-screen');
@@ -1782,7 +1810,8 @@
     
 
             tooltip.classList.add('visible');
-        }
+    }
+
 
         function hideNodeTooltip() {
             const tooltip = document.getElementById('nodeTooltip');
@@ -2134,37 +2163,58 @@
                 const pattern = spiralPatterns[startingHexIndex] || spiralPatterns[0];
                 let numberIndex = 0;
                 
+                // First remove any existing tokens
                 pattern.forEach(hexIndex => {
                     const hex = document.querySelector(`[data-index="${hexIndex}"]`);
-                    
                     const existingToken = hex.querySelector('.number-token');
                     if (existingToken) {
                         existingToken.remove();
                     }
-
+                });
+                
+                // Animate them dropping in spiral order
+                let delay = 0;
+                pattern.forEach(hexIndex => {
+                    const hex = document.querySelector(`[data-index="${hexIndex}"]`);
+                    
                     if (tiles[hexIndex].resource !== 'desert') {
                         tiles[hexIndex].number = numberSequence[numberIndex];
-                        addNumberToken(hex, numberSequence[numberIndex]); 
+                        const currentNumber = numberSequence[numberIndex];
+                        
+                        setTimeout(() => {
+                            addNumberToken(hex, currentNumber);
+                            
+                            // Use requestAnimationFrame to ensure DOM is updated before animating
+                            requestAnimationFrame(() => {
+                                const token = hex.querySelector('.number-token');
+                                if (token) {
+                                    token.classList.add('dropping');
+                                }
+                            });
+                        }, delay);
+                        
                         numberIndex++;
+                        delay += 150;
+                    
                     } else {
-                        tiles[hexIndex].number = null; 
+                        tiles[hexIndex].number = null;
                     }
                 });
                 
-                currentStep = 3;
-                document.getElementById('step-2').classList.remove('active');
-                document.getElementById('step-2').classList.add('completed');
-                document.getElementById('step-3').classList.add('active');
-                
-                document.querySelectorAll('.hex').forEach(h => h.classList.remove('start-position'));
-                
-                document.querySelector('.controls').style.display = 'none';
-                
-                setTimeout(async () => {
-                    await startAlgorithm();
-                }, 500);
+                // Wait for all animations before moving to next step
+                setTimeout(() => {
+                    currentStep = 3;
+                    document.getElementById('step-2').classList.remove('active');
+                    document.getElementById('step-2').classList.add('completed');
+                    document.getElementById('step-3').classList.add('active');
+                    
+                    document.querySelectorAll('.hex').forEach(h => h.classList.remove('start-position'));
+                    document.querySelector('.controls').style.display = 'none';
+                    
+                    startAlgorithm();
+                }, delay + 500);
             }
-        }
+            }
 
         async function startAlgorithm() {
             globalBoardData = tiles.map((tile, index) => ({
