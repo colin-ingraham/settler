@@ -13,14 +13,28 @@
         }
 
         body {
-            background: linear-gradient(180deg, #2c5282 0%, #1e3a5f 100%);
+            background: linear-gradient(180deg, #3a3a3a 0%, #2d2d2d 50%, #1f1f1f 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Georgia', 'Palatino', serif;
             padding: 40px 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 111, 71, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(101, 67, 33, 0.03) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         /* --- Player Setup Screen Styles --- */
@@ -29,23 +43,54 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .setup-card {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 24px;
+            background: 
+                linear-gradient(135deg, rgba(245, 235, 215, 0.15) 0%, transparent 100%),
+                linear-gradient(180deg, #F5E6D3 0%, #E8D7C3 100%);
+            border-radius: 16px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            color: white;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 0 0 1px rgba(101, 67, 33, 0.2);
+            color: #3E2723;
             width: 400px;
             text-align: center;
+            position: relative;
+            border: 3px solid #8B6F47;
+        }
+        
+        .setup-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 111, 71, 0.03) 2px,
+                    rgba(139, 111, 71, 0.03) 4px
+                );
+            border-radius: 16px;
+            pointer-events: none;
         }
 
         .setup-card h2 {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 25px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            color: #5D4037;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            font-family: 'Georgia', serif;
         }
 
         .form-group {
@@ -57,7 +102,9 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #cbd5e1;
+            color: #4E342E;
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
 
         .form-group select,
@@ -65,15 +112,21 @@
             width: 100%;
             padding: 12px;
             border-radius: 8px;
-            border: 2px solid #64748b;
-            background: #1e293b;
-            color: white;
+            border: 2px solid #8B6F47;
+            background: linear-gradient(180deg, #FFFEF7 0%, #F5F2E8 100%);
+            color: #3E2723;
             font-size: 16px;
+            font-family: 'Georgia', serif;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .form-group input:focus {
-            border-color: #3b82f6;
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #D4A574;
             outline: none;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.1),
+                0 0 0 3px rgba(212, 165, 116, 0.2);
         }
 
         #player-inputs-container {
@@ -89,6 +142,8 @@
             align-items: center;
             justify-content: center;
             gap: 30px;
+            position: relative;
+            z-index: 1;
         }
 
         .main-content {
@@ -103,71 +158,92 @@
         }
 
         .title {
-            font-size: 48px;
+            font-size: 52px;
             font-weight: 700;
-            color: #ffffff;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            letter-spacing: 4px;
+            color: #F5E6D3;
+            text-shadow: 
+                3px 3px 0 #3E2723,
+                4px 4px 8px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(245, 230, 211, 0.3);
+            letter-spacing: 8px;
             margin-bottom: 8px;
+            font-family: 'Georgia', serif;
         }
 
         .subtitle {
             font-size: 16px;
-            color: #cbd5e1;
-            letter-spacing: 2px;
+            color: #D4C5A0;
+            letter-spacing: 4px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-weight: 500;
         }
 
         .setup-steps {
-            background: rgba(30, 41, 59, 0.8);
+            background: 
+                linear-gradient(135deg, rgba(245, 235, 215, 0.1) 0%, transparent 100%),
+                linear-gradient(180deg, rgba(62, 39, 35, 0.85) 0%, rgba(46, 30, 26, 0.9) 100%);
             padding: 16px 32px;
             border-radius: 12px;
             margin-bottom: 20px;
             display: flex;
             gap: 40px;
             align-items: center;
+            border: 2px solid rgba(139, 111, 71, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         .step {
             display: flex;
             align-items: center;
             gap: 12px;
-            color: #64748b;
+            color: #8B7355;
             font-size: 14px;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .step.active {
-            color: #3b82f6;
+            color: #D4A574;
         }
 
         .step.completed {
-            color: #22c55e;
+            color: #A8D5A3;
         }
 
         .step-number {
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: #1e293b;
+            background: linear-gradient(135deg, #4A3428 0%, #3E2A20 100%);
             border: 2px solid currentColor;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .step.completed .step-number {
-            background: #22c55e;
+            background: linear-gradient(135deg, #7CB342 0%, #689F38 100%);
             color: white;
+            border-color: #9CCC65;
         }
 
         .board-container {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 24px;
+            
+            background-image: url('{% static "game/images/harbor.png" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            background-color: #2D5F6F;
+            border-radius: 20px;
             padding: 80px;
             box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                0 20px 60px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 0 4px #8B6F47,
+                0 0 0 6px rgba(62, 39, 35, 0.6);
             position: relative;
         }
 
@@ -175,14 +251,11 @@
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 24px;
-            padding: 3px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0.6;
+            border-radius: 20px;
+            background: linear-gradient(135deg, 
+                rgba(212, 165, 116, 0.2), 
+                rgba(139, 111, 71, 0.1));
+            pointer-events: none;
         }
 
         .board {
@@ -196,12 +269,13 @@
             width: 140px;
             height: 140px;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
 
         .hex:hover {
             transform: scale(1.05);
             z-index: 10;
+            filter: brightness(1.1);
         }
 
         .hex-inner {
@@ -209,12 +283,18 @@
             height: 100%;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.1);
             position: relative;
         }
 
         .hex:hover .hex-inner {
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.6),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.2);
         }
 
         .resource-wood,
@@ -264,90 +344,206 @@
             transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
-            background: white;
+            background: linear-gradient(135deg, #FFF8E7 0%, #F5E6D3 100%);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.5),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8),
+                0 0 0 2px #8B6F47;
             pointer-events: none;
+            padding: 2px 0;
         }
 
         .number-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
-            color: #1e293b;
+            color: #3E2723;
+            font-family: 'Georgia', serif;
+            line-height: 1;
         }
 
         .number-value.red {
-            color: #dc2626;
+            color: #C62828;
         }
 
         .number-pips {
             display: flex;
             gap: 1.5px; 
-            margin-top: -2px;
+            margin-top: 2px;
         }
 
         .pip {
             width: 3px;
             height: 3px;
-            background: #1e293b;
+            background: #3E2723;
             border-radius: 50%;
         }
 
         .pip.red {
-            background: #dc2626;
+            background: #C62828;
         }
 
         .hex.start-position .hex-inner {
-            box-shadow: 0 0 0 4px #3b82f6, 0 8px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                0 0 0 4px #D4A574,
+                0 0 0 7px rgba(212, 165, 116, 0.4),
+                0 8px 20px rgba(0, 0, 0, 0.5);
             animation: pulse-border 1.5s infinite;
         }
 
         @keyframes pulse-border {
-            0%, 100% { box-shadow: 0 0 0 4px #3b82f6, 0 8px 20px rgba(0, 0, 0, 0.5); }
-            50% { box-shadow: 0 0 0 4px #60a5fa, 0 8px 24px rgba(59, 130, 246, 0.6); }
+            0%, 100% { 
+                box-shadow: 
+                    0 0 0 4px #D4A574,
+                    0 0 0 7px rgba(212, 165, 116, 0.4),
+                    0 8px 20px rgba(0, 0, 0, 0.5);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 0 4px #F5D7A0,
+                    0 0 0 10px rgba(245, 215, 160, 0.6),
+                    0 8px 24px rgba(212, 165, 116, 0.6);
+            }
         }
 
         .settlement-node {
             position: absolute;
             width: 14px;
             height: 14px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 2px solid #1e293b;
+            background: linear-gradient(135deg, #FFF8E7 0%, #F0E6D2 100%);
+            border: 2px solid #5D4037;
             border-radius: 50%;
             transform: translate(-50%, -50%);
             z-index: 100;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .settlement-node:hover {
-            background: #fbbf24;
-            border-color: #f59e0b;
-            transform: translate(-50%, -50%) scale(1.3);
+            background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
+            border-color: #F57C00;
+            transform: translate(-50%, -50%) scale(1.4);
             opacity: 1;
+            box-shadow: 0 3px 8px rgba(255, 193, 7, 0.6);
         }
 
         .settlement-node.placed {
             transform: translate(-50%, -50%) scale(1.2);
             border-width: 3px;
             opacity: 1;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* House Shape for Placed Settlements */
+        .settlement-house {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 18px;
+            height: 24px;
+            pointer-events: none;
+        }
+
+        .house-roof {
+            width: 0;
+            height: 0;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-bottom: 10px solid currentColor;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .house-base {
+            width: 18px;
+            height: 14px;
+            background: currentColor;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border: 2px solid #1a1a1a;
+            box-sizing: border-box;
+        }
+
+        /* --- Node Tooltip Styles --- */
+        .node-tooltip {
+            position: absolute;
+            background: 
+                linear-gradient(135deg, rgba(245, 235, 215, 0.98) 0%, rgba(232, 215, 195, 0.98) 100%);
+            border: 2px solid #8B6F47;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #3E2723;
+            font-size: 13px;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            display: none;
+            min-width: 180px;
+        }
+
+        .node-tooltip.visible {
+            display: block;
+        }
+
+        .tooltip-score {
+            font-weight: 700;
+            font-size: 16px;
+            color: #8B6F47;
+            margin-bottom: 6px;
+        }
+
+        .tooltip-description {
+            font-size: 12px;
+            color: #5D4037;
+            line-height: 1.4;
+        }
+
+        /* --- Port Styles --- */
+        .port {
+            position: absolute;
+            width: 60px;
+            height: 30px;
+            background: linear-gradient(135deg, #F5E6D3 0%, #E0D4C0 100%);
+            border: 2px solid #6D4C41;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #3E2723;
+            font-size: 13px;
+            z-index: 50;
+            box-shadow: 
+                0 3px 8px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            font-family: 'Georgia', serif;
         }
 
         .instructions {
             margin-top: 25px;
             text-align: center;
-            color: #cbd5e1;
+            color: #E8D7C3;
             font-size: 15px;
             max-width: 600px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+            line-height: 1.6;
         }
 
         .instruction-highlight {
-            color: #fbbf24;
+            color: #FFC107;
             font-weight: 600;
+            text-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
         }
 
         .controls {
@@ -359,21 +555,32 @@
         }
 
         .control-button {
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            color: white;
-            border: none;
+            background: linear-gradient(135deg, #8B6F47 0%, #6D5537 100%);
+            color: #FFF8E7;
+            border: 2px solid #5D4037;
             padding: 14px 28px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             transition: all 0.2s;
+            font-family: 'Georgia', serif;
+            letter-spacing: 0.5px;
         }
 
         .control-button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+            box-shadow: 
+                0 6px 16px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #9D7D53 0%, #7D6343 100%);
+        }
+
+        .control-button:active:not(:disabled) {
+            transform: translateY(0);
         }
 
         .control-button:disabled {
@@ -382,29 +589,39 @@
         }
 
         .control-button.secondary {
-            background: linear-gradient(135deg, #64748b, #475569);
+            background: linear-gradient(135deg, #6B5744 0%, #5C4A37 100%);
+            border-color: #4E342E;
+        }
+
+        .control-button.secondary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #7A6553 0%, #6A5543 100%);
         }
 
         .player-sidebar {
             width: 200px;
-            background: rgba(30, 41, 59, 0.8);
+            background: 
+                linear-gradient(135deg, rgba(245, 235, 215, 0.1) 0%, transparent 100%),
+                linear-gradient(180deg, rgba(62, 39, 35, 0.85) 0%, rgba(46, 30, 26, 0.9) 100%);
             border-radius: 12px;
             padding: 20px;
             color: white;
-            display: none; /* Hidden until game starts */
+            display: none; 
             flex-direction: column;
             gap: 15px;
             align-self: flex-start; 
-            margin-top: 78px; 
+            margin-top: 78px;
+            border: 2px solid rgba(139, 111, 71, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
 
         .player-sidebar h3 {
             text-align: center;
             font-size: 18px;
-            color: #cbd5e1;
-            border-bottom: 1px solid #64748b;
+            color: #E8D7C3;
+            border-bottom: 2px solid rgba(139, 111, 71, 0.4);
             padding-bottom: 10px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
         }
 
         .player-card {
@@ -414,20 +631,25 @@
             padding: 10px;
             border-radius: 8px;
             transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .player-card.active {
-            background: #3b82f6;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #8B6F47 0%, #6D5537 100%);
+            box-shadow: 
+                0 4px 12px rgba(139, 111, 71, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             transform: scale(1.05);
+            border: 1px solid rgba(212, 165, 116, 0.5);
         }
 
         .player-color-swatch {
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            border: 2px solid white;
+            border: 2px solid #F5E6D3;
             flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .player-name {
@@ -435,13 +657,15 @@
             font-size: 15px;
         }
 
-        /* --- NEW: Draft Summary Screen Styles --- */
+        /* --- Draft Summary Screen Styles --- */
         #draft-summary-screen {
-            display: none; /* Hidden by default */
+            display: none; 
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
+            position: relative;
+            z-index: 1;
         }
 
         #summary-cards-container {
@@ -454,25 +678,50 @@
         }
 
         .summary-card {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            background: 
+                linear-gradient(135deg, rgba(245, 235, 215, 0.15) 0%, transparent 100%),
+                linear-gradient(180deg, #F5E6D3 0%, #E8D7C3 100%);
             border-radius: 12px;
             padding: 20px;
             width: 220px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid #475569;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 3px solid #8B6F47;
+            position: relative;
+        }
+        
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 111, 71, 0.03) 2px,
+                    rgba(139, 111, 71, 0.03) 4px
+                );
+            border-radius: 12px;
+            pointer-events: none;
         }
 
         .summary-card-header {
             display: flex;
             align-items: center;
             gap: 10px;
-            border-bottom: 1px solid #475569;
+            border-bottom: 2px solid #8B6F47;
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
 
         .summary-card-header .player-name {
             font-size: 18px;
+            color: #3E2723;
         }
 
         .summary-stats {
@@ -489,12 +738,13 @@
         }
 
         .stat-label {
-            color: #cbd5e1;
+            color: #5D4037;
+            font-weight: 500;
         }
 
         .stat-value {
             font-weight: 700;
-            color: #fbbf24; /* Highlight color for stats */
+            color: #8B6F47;
         }
 
         .win-percentage {
@@ -504,15 +754,133 @@
         .win-percentage .stat-label {
             font-size: 14px;
             margin-bottom: 5px;
+            color: #5D4037;
         }
         
         .win-percentage .stat-value {
             font-size: 42px;
             font-weight: 900;
-            color: #22c55e; /* Green for win % */
+            color: #7CB342;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        /* --- End Summary Screen Styles --- */
 
+        /* Node score colors with pulsing animation */
+        .settlement-node.score-high {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            border-color: #16a34a;
+            animation: pulse-green 2s ease-in-out infinite;
+        }
+
+        .settlement-node.score-mid {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-color: #d97706;
+            animation: pulse-yellow 2s ease-in-out infinite;
+        }
+
+        .settlement-node.score-low {
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            border-color: #dc2626;
+            animation: pulse-red 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { 
+                box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 16px rgba(34, 197, 94, 0.9);
+                transform: translate(-50%, -50%) scale(1.15);
+            }
+        }
+
+        @keyframes pulse-yellow {
+            0%, 100% { 
+                box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 16px rgba(245, 158, 11, 0.9);
+                transform: translate(-50%, -50%) scale(1.15);
+            }
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { 
+                box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 16px rgba(239, 68, 68, 0.9);
+                transform: translate(-50%, -50%) scale(1.15);
+            }
+        }
+
+        .settlement-node.disabled {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            border-color: #374151;
+            cursor: not-allowed;
+            opacity: 0.4;
+            animation: none;
+        }
+
+        .settlement-node.disabled:hover {
+            transform: translate(-50%, -50%) scale(1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .settlement-node.placed {
+            animation: none;
+        }
+
+        /* BEST SPOTS - Top 2 nodes */
+        .settlement-node.score-best {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%) !important;
+            border: 3px solid #ffd700 !important;
+            animation: pulse-best 1.5s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.9) !important;
+        }
+
+        @keyframes pulse-best {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 15px rgba(251, 191, 36, 1),
+                    0 0 30px rgba(251, 191, 36, 0.6),
+                    inset 0 0 10px rgba(255, 215, 0, 0.4);
+                transform: translate(-50%, -50%) scale(1.1);
+                border-color: #ffd700;
+            }
+            50% { 
+                box-shadow: 
+                    0 0 25px rgba(251, 191, 36, 1),
+                    0 0 45px rgba(251, 191, 36, 0.8),
+                    inset 0 0 15px rgba(255, 215, 0, 0.6);
+                transform: translate(-50%, -50%) scale(1.3);
+                border-color: #fff;
+            }
+        }
+
+        .settlement-node.score-best::after {
+            content: '★';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 25px;  /* Changed from 10px */
+            color: #fff;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.9);  /* Stronger shadow */
+            pointer-events: none;
+            animation: star-twinkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes star-twinkle {
+            0%, 100% { opacity: 0.8; }  /* Changed from 0.7 */
+            50% { opacity: 1; }
+        }
+
+        .settlement-node.score-best:hover::after {
+            font-size: 16px;  /* Changed from 12px */
+        }
     </style>
 </head>
 <body>
@@ -520,7 +888,7 @@
     <div id="player-setup-screen">
         <div class="header">
             <div class="title">SETTLER</div>
-            <div class="subtitle">GAME SETUP</div>
+            <div class="subtitle">CATAN PLACEMENT STRATEGIST</div>
         </div>
         <div class="setup-card">
             <h2>Create Your Game</h2>
@@ -547,7 +915,7 @@
         <div class="main-content">
             <div class="header">
                 <div class="title">SETTLER</div>
-                <div class="subtitle">BOARD SETUP</div>
+                <div class="subtitle">CATAN PLACEMENT STRATEGIST</div>
             </div>
 
             <div class="setup-steps">
@@ -567,14 +935,18 @@
 
             <div class="board-container">
                 <div class="board" id="board"></div>
+                <div class="node-tooltip" id="nodeTooltip">
+                    <div class="tooltip-score" id="tooltipScore">Score: 8.5/10</div>
+                    <div class="tooltip-description" id="tooltipDescription">Strong wheat/ore position with good number diversity</div>
+                </div>
             </div>
 
-            <div classs="instructions" id="instructions">
+            <div class="instructions" id="instructions">
                 <span class="instruction-highlight">Click any tile</span> to cycle through resource types (Wood → Brick → Sheep → Wheat → Ore → Desert)
             </div>
 
             <div class="controls">
-                <button class="control-button secondary" onclick="randomizeBoard()">Randomize All</button>
+                <button class="control-button secondary" id="randomizeButton" onclick="randomizeBoard()">Randomize All</button>
                 <button class="control-button" id="nextButton" onclick="nextStep()">Continue to Number Placement →</button>
             </div>
         </div>
@@ -603,7 +975,10 @@
         
         let players = [];
         let placementOrder = [];
-        let currentPlacementTurn = 0; 
+        let currentPlacementTurn = 0;
+        
+        // Store node scores from algorithm
+        let nodeScores = {};
         
         const playerColors = [
             "#EF4444", // Red
@@ -625,19 +1000,127 @@
         ];
 
         const nodePositions = [
-            { x: 174, y: 0 }, { x: 312, y: 0 }, { x: 448, y: 0 }, 
-            { x: 105, y: 35 }, { x: 242, y: 35 }, { x: 378, y: 35 }, { x: 519, y: 35 },
-            { x: 105, y: 105 }, { x: 242, y: 105 }, { x: 378, y: 105 }, { x: 519, y: 105 },
-            { x: 36, y: 140 }, { x: 174, y: 140 }, { x: 309, y: 140 }, { x: 447, y: 140 }, { x: 588, y: 140 },
-            { x: 36, y: 210 }, { x: 174, y: 210 }, { x: 309, y: 210 }, { x: 447, y: 210 }, { x: 588, y: 210 },
-            { x: -32, y: 245 }, { x: 105, y: 245 }, { x: 242, y: 245 }, { x: 378, y: 245 }, { x: 519, y: 245 }, { x: 655, y: 245 }, 
-            { x: -32, y: 315 }, { x: 105, y: 315 }, { x: 242, y: 315 }, { x: 378, y: 315 }, { x: 519, y: 315 }, { x: 655, y: 315 },
-            { x: 36, y: 350 }, { x: 174, y: 350 }, { x: 309, y: 350 }, { x: 447, y: 350 }, { x: 588, y: 350 },
-            { x: 36, y: 420 }, { x: 174, y: 420 }, { x: 309, y: 420 }, { x: 447, y: 420 }, { x: 588, y: 420 }, 
-            { x: 105, y: 455 }, { x: 242, y: 455 }, { x: 378, y: 455 }, { x: 519, y: 455 },
-            { x: 105, y: 525 }, { x: 242, y: 525 }, { x: 378, y: 525 }, { x: 519, y: 525 },
-            { x: 174, y: 560 }, { x: 309, y: 560 }, { x: 447, y: 560 },
+            // Row 1 (n0-n6): 7 nodes - Top edge
+            { x: 105, y: 35 }, { x: 174, y: 0 }, { x: 242, y: 35 }, { x: 312, y: 0 }, 
+            { x: 378, y: 35 }, { x: 448, y: 0 }, { x: 519, y: 35 },
+            
+            // Row 2 (n7-n15): 9 nodes
+            { x: 36, y: 140 }, { x: 105, y: 105 }, { x: 174, y: 140 }, { x: 242, y: 105 }, 
+            { x: 309, y: 140 }, { x: 378, y: 105 }, { x: 447, y: 140 }, { x: 519, y: 105 }, 
+            { x: 588, y: 140 },
+            
+            // Row 3 (n16-n26): 11 nodes
+            { x: -32, y: 245 }, { x: 36, y: 210 }, { x: 105, y: 245 }, { x: 174, y: 210 }, 
+            { x: 242, y: 245 }, { x: 309, y: 210 }, { x: 378, y: 245 }, { x: 447, y: 210 }, 
+            { x: 519, y: 245 }, { x: 588, y: 210 }, { x: 655, y: 245 },
+            
+            // Row 4 (n27-n37): 11 nodes  
+            { x: -32, y: 315 }, { x: 36, y: 350 }, { x: 105, y: 315 }, { x: 174, y: 350 }, 
+            { x: 242, y: 315 }, { x: 309, y: 350 }, { x: 378, y: 315 }, { x: 447, y: 350 }, 
+            { x: 519, y: 315 }, { x: 588, y: 350 }, { x: 655, y: 315 },
+            
+            // Row 5 (n38-n46): 9 nodes
+            { x: 36, y: 420 }, { x: 105, y: 455 }, { x: 174, y: 420 }, { x: 242, y: 455 }, 
+            { x: 309, y: 420 }, { x: 378, y: 455 }, { x: 447, y: 420 }, { x: 519, y: 455 }, 
+            { x: 588, y: 420 },
+            
+            // Row 6 (n47-n53): 7 nodes - Bottom edge
+            { x: 105, y: 525 }, { x: 174, y: 560 }, { x: 242, y: 525 }, { x: 309, y: 560 }, 
+            { x: 378, y: 525 }, { x: 447, y: 560 }, { x: 519, y: 525 }
         ];
+        
+        const nodeAdjacency = {
+            // Row 1 (Top Edge)
+            0: [1, 8],
+            1: [0, 2],
+            2: [1, 3, 10],
+            3: [2, 4],
+            4: [3, 5, 12],
+            5: [4, 6],
+            6: [5, 14],
+
+            // Row 2
+            7: [8, 17],
+            8: [0, 7, 9],
+            9: [8, 10, 19],
+            10: [2, 9, 11],
+            11: [10, 12, 21],
+            12: [4, 11, 13],
+            13: [12, 14, 23],
+            14: [6, 13, 15],
+            15: [14, 25],
+
+            // Row 3
+            16: [17, 27],
+            17: [7, 16, 18],
+            18: [17, 19, 29],
+            19: [9, 18, 20],
+            20: [19, 21, 31],
+            21: [11, 20, 22],
+            22: [21, 23, 33],
+            23: [13, 22, 24],
+            24: [23, 25, 35],
+            25: [15, 24, 26],
+            26: [25, 37],
+
+            // Row 4
+            27: [16, 28],
+            28: [27, 29, 38],
+            29: [18, 28, 30],
+            30: [29, 31, 40],
+            31: [20, 30, 32],
+            32: [31, 33, 42],
+            33: [22, 32, 34],
+            34: [33, 35, 44],
+            35: [24, 34, 36],
+            36: [35, 37, 46],
+            37: [26, 36],
+
+            // Row 5
+            38: [28, 39],
+            39: [38, 40, 47],
+            40: [30, 39, 41],
+            41: [40, 42, 49],
+            42: [32, 41, 43],
+            43: [42, 44, 51],
+            44: [34, 43, 45],
+            45: [44, 46, 53],
+            46: [36, 45],
+
+            // Row 6 (Bottom Edge)
+            47: [39, 48],
+            48: [47, 49],
+            49: [41, 48, 50],
+            50: [49, 51],
+            51: [43, 50, 52],
+            52: [51, 53],
+            53: [45, 52]
+        };
+        
+        const portPositions = [
+            { x: 230, y: -28, r: -27 }, 
+            { x: 470, y: -23, r: 27 },  
+            { x: 590, y: 160, r: 0 }, 
+            { x: 590, y: 370, r: 0 }, 
+            { x: 470, y: 545, r: -27 },   
+            { x: 240, y: 550, r: 25 },   
+            { x: 100, y: 550, r: 25 },   
+            { x: -30, y: 370, r: 0 },  
+            { x: -30, y: 160, r: 0 }    
+        ];
+
+        const portTypes = [
+            '3:1', '3:1', 'field', 'forest', '3:1', 'pasture', '3:1', 'hill', 'mountain'
+        ];
+
+        const portText = {
+            'forest': 'Wood',
+            'hill': 'Brick',
+            'pasture': 'Sheep',
+            'field': 'Wheat',
+            'mountain': 'Ore',
+            '3:1': '3:1'
+        };
 
         const spiralPatterns = {
             0: [0, 1, 2, 6, 11, 15, 18, 17, 16, 12, 7, 3, 4, 5, 10, 14, 13, 8, 9],
@@ -656,11 +1139,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             const setupScreen = document.getElementById('player-setup-screen');
             const gameScreen = document.getElementById('game-screen');
-            const summaryScreen = document.getElementById('draft-summary-screen'); // NEW
+            const summaryScreen = document.getElementById('draft-summary-screen');
             const playerSelect = document.getElementById('player-count-select');
             const inputsContainer = document.getElementById('player-inputs-container');
             const startGameBtn = document.getElementById('start-game-btn');
-            const playAgainBtn = document.getElementById('play-again-btn'); // NEW
+            const playAgainBtn = document.getElementById('play-again-btn');
 
             function generatePlayerInputs() {
                 const count = playerSelect.value;
@@ -687,10 +1170,10 @@
 
                 placementOrder = [];
                 for (let i = 0; i < players.length; i++) {
-                    placementOrder.push(i); // Forward
+                    placementOrder.push(i);
                 }
                 for (let i = players.length - 1; i >= 0; i--) {
-                    placementOrder.push(i); // Backward
+                    placementOrder.push(i);
                 }
 
                 setupScreen.style.display = 'none';
@@ -699,17 +1182,151 @@
                 initializeBoard();
             }
 
-            // NEW: Function to restart the game
             function restartGame() {
                 window.location.reload();
             }
 
             playerSelect.addEventListener('change', generatePlayerInputs);
             startGameBtn.addEventListener('click', initializeGame);
-            playAgainBtn.addEventListener('click', restartGame); // NEW
+            playAgainBtn.addEventListener('click', restartGame);
 
             generatePlayerInputs();
         });
+        
+        // --- API Integration ---
+        
+        async function fetchNodeScores() {
+            const boardData = tiles.map((tile, index) => ({
+                resource: tile.resource,
+                roll: tile.number,
+                index: index
+            }));
+            
+            try {
+                const response = await fetch('/api/calculate-scores/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        board_data: boardData
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    nodeScores = data.scores;
+                    console.log('Node scores loaded:', nodeScores);
+                    applyNodeScoreColors();
+                } else {
+                    console.error('Failed to load scores:', data.error);
+                }
+            } catch (error) {
+                console.error('Error fetching scores:', error);
+            }
+        }
+        function applyNodeScoreColors() {
+            // Collect all scores with their indices
+            const scoreData = Object.entries(nodeScores).map(([algoId, data]) => ({
+                algorithmId: parseInt(algoId),
+                score: data.score,
+                description: data.description
+            }));
+            
+            // Sort by score descending to find top 2
+            scoreData.sort((a, b) => b.score - a.score);
+            const topTwoAlgoIds = new Set([
+                scoreData[0].algorithmId,
+                scoreData[1].algorithmId
+            ]);
+            
+            console.log('Top 2 nodes:', scoreData[0], scoreData[1]);
+            
+            // Calculate thresholds for remaining nodes
+            const scores = scoreData.slice(2).map(d => d.score); // Exclude top 2
+            const maxScore = Math.max(...scores);
+            const minScore = Math.min(...scores);
+            
+            // Define thresholds (top 33% = high, middle 33% = mid, bottom 33% = low)
+            const highThreshold = minScore + (maxScore - minScore) * 0.66;
+            const midThreshold = minScore + (maxScore - minScore) * 0.33;
+            
+            // Apply classes to each node
+            nodePositions.forEach((pos, index) => {
+                // Now index directly corresponds to algorithm node ID
+                const nodeElement = document.getElementById(`node-${index + 1}`);
+                
+                if (nodeScores[index]) {
+                    const score = nodeScores[index].score;
+                    
+                    nodeElement.classList.remove('score-best', 'score-high', 'score-mid', 'score-low');
+                    
+                    if (topTwoAlgoIds.has(index)) {
+                        nodeElement.classList.add('score-best');
+                        console.log(`Node ${index + 1} is a BEST spot! Score: ${score}`);
+                    } else {
+                        if (score >= highThreshold) {
+                            nodeElement.classList.add('score-high');
+                        } else if (score >= midThreshold) {
+                            nodeElement.classList.add('score-mid');
+                        } else {
+                            nodeElement.classList.add('score-low');
+                        }
+                    }
+                }
+            });
+        }
+        function disableAdjacentNodes(visualNodeIndex) {
+            const adjacentNodes = nodeAdjacency[visualNodeIndex];
+            
+            if (adjacentNodes) {
+                adjacentNodes.forEach(adjIndex => {
+                    const adjNode = document.getElementById(`node-${adjIndex + 1}`);
+                    if (adjNode && !adjNode.classList.contains('placed')) {
+                        adjNode.classList.add('disabled');
+                        adjNode.classList.remove('score-best');
+                        adjNode.style.pointerEvents = 'none';
+                    }
+                });
+            }
+        }
+
+        function updateBestSpots() {
+            // 1. Clear all existing 'score-best' classes
+            document.querySelectorAll('.settlement-node.score-best').forEach(node => {
+            node.classList.remove('score-best');
+            });
+
+            // 2. Get sorted list of all scores from the global 'nodeScores'
+            const scoreData = Object.entries(nodeScores).map(([algoId, data]) => ({
+                algorithmId: parseInt(algoId),
+                score: data.score
+            }));
+            scoreData.sort((a, b) => b.score - a.score);
+
+            // 3. Find the top 2 *available* nodes
+            const newBestSpots = [];
+            for (const nodeData of scoreData) {
+                // Stop if we've found 2
+                if (newBestSpots.length >= 2) {
+                break; 
+            }
+
+            const nodeId = nodeData.algorithmId + 1; // 1-indexed for DOM
+            const nodeElement = document.getElementById(`node-${nodeId}`);
+
+            // Check if the node exists and is NOT placed or disabled
+            if (nodeElement && !nodeElement.classList.contains('placed') && !nodeElement.classList.contains('disabled')) {
+                newBestSpots.push(nodeElement);
+                }
+            }
+
+            // 4. Apply the 'score-best' class to the new top 2
+            newBestSpots.forEach(node => {
+                node.classList.add('score-best');
+                });
+        }
         
         // --- Board & Draft JS ---
 
@@ -727,6 +1344,18 @@
             hex.addEventListener('click', () => handleHexClick(hex, index));
             
             return hex;
+        }
+
+        function createPort(pos, type) {
+            const port = document.createElement('div');
+            port.className = 'port';
+            port.style.left = `${pos.x}px`;
+            port.style.top = `${pos.y}px`;
+            port.style.transform = `rotate(${pos.r}deg)`;
+            
+            port.textContent = portText[type] || '???';
+            
+            return port;
         }
 
         function handleHexClick(hex, index) {
@@ -784,12 +1413,64 @@
             node.style.top = `${pos.y}px`;
             node.title = `Settlement Node ${id}`;
             node.addEventListener('click', () => handleNodeClick(node, id));
+            
+            node.addEventListener('mouseenter', (e) => showNodeTooltip(e, id, pos));
+            node.addEventListener('mouseleave', hideNodeTooltip);
+            
             return node;
         }
 
+        function showNodeTooltip(event, nodeId, nodePos) {
+            if (currentStep !== 3) return;
+            
+            const node = event.target;
+            if (node.classList.contains('placed') || node.classList.contains('disabled')) return;
+            
+            const tooltip = document.getElementById('nodeTooltip');
+            const tooltipScore = document.getElementById('tooltipScore');
+            const tooltipDescription = document.getElementById('tooltipDescription');
+            
+            // Map visual node ID to algorithm node ID
+            const algorithmNodeId = nodeId - 1;
+            
+            if (nodeScores && nodeScores[algorithmNodeId]) {
+                const nodeData = nodeScores[algorithmNodeId];
+                
+                // Check if this is a best spot
+                if (node.classList.contains('score-best')) {
+                    tooltipScore.textContent = `⭐ BEST SPOT! Score: ${nodeData.score}/15 ⭐`;
+                    tooltipScore.style.color = '#f59e0b';
+                    tooltipScore.style.fontSize = '18px';
+                } else {
+                    tooltipScore.textContent = `Score: ${nodeData.score}/15`;
+                    tooltipScore.style.color = '#8B6F47';
+                    tooltipScore.style.fontSize = '16px';
+                }
+                
+                tooltipDescription.textContent = nodeData.description;
+            } else {
+                // Fallback
+                tooltipScore.textContent = `Score: ${(Math.random() * 3 + 7).toFixed(1)}/10`;
+                tooltipScore.style.color = '#8B6F47';
+                tooltipScore.style.fontSize = '16px';
+                tooltipDescription.textContent = 'Loading...';
+            }
+            
+            tooltip.style.left = `${nodePos.x + 25}px`;
+            tooltip.style.top = `${nodePos.y - 10}px`;
+            
+            tooltip.classList.add('visible');
+        }
+
+        function hideNodeTooltip() {
+            const tooltip = document.getElementById('nodeTooltip');
+            tooltip.classList.remove('visible');
+        }
+
         function handleNodeClick(node, id) {
-            if (node.classList.contains('placed')) {
-                console.log('Node already taken');
+            // Check if node is disabled or already placed
+            if (node.classList.contains('placed') || node.classList.contains('disabled')) {
+                console.log('Node unavailable');
                 return;
             }
             if (currentPlacementTurn >= placementOrder.length) {
@@ -801,12 +1482,28 @@
             const player = players[playerIndex];
             console.log(`Node ${id} clicked by ${player.name}`);
 
-            node.style.background = player.color;
-            node.style.borderColor = '#111';
+            const house = document.createElement('div');
+            house.className = 'settlement-house';
+            house.style.color = player.color;
+            
+            const roof = document.createElement('div');
+            roof.className = 'house-roof';
+            
+            const base = document.createElement('div');
+            base.className = 'house-base';
+            
+            house.appendChild(roof);
+            house.appendChild(base);
+            node.appendChild(house);
+            
             node.classList.add('placed');
+            node.classList.remove('score-high', 'score-mid', 'score-low', 'score-best'); // Remove pulsing
             node.dataset.owner = playerIndex;
-            node.style.pointerEvents = 'none'; 
-
+            node.style.pointerEvents = 'none';
+            
+            // Disable adjacent nodes (settlement spacing rule)
+            disableAdjacentNodes(id - 1); // id is 1-indexed, need 0-indexed
+            updateBestSpots();
             currentPlacementTurn++;
             updateTurnIndicator();
         }
@@ -834,7 +1531,6 @@
             });
         }
 
-        /* MODIFIED: Now triggers summary screen */
         function updateTurnIndicator() {
             const instructions = document.getElementById('instructions');
             document.querySelectorAll('.player-card').forEach(card => {
@@ -844,14 +1540,11 @@
             if (currentPlacementTurn >= placementOrder.length) {
                 instructions.innerHTML = 'Settlement draft complete!';
                 
-                // --- NEW: Trigger Summary Screen ---
-                // Use a short timeout to let the last move render
                 setTimeout(() => {
                     document.getElementById('game-screen').style.display = 'none';
                     generateDraftSummary();
                     document.getElementById('draft-summary-screen').style.display = 'flex';
                 }, 1000); 
-                // --- End of new trigger ---
                 
                 return;
             }
@@ -863,18 +1556,14 @@
             instructions.innerHTML = `<span style="color:${nextPlayer.color}; text-shadow: 0 0 2px #000;">${nextPlayer.name}</span>, place your settlement.`;
         }
         
-        /* NEW: Function to generate summary */
         function generateDraftSummary() {
             const container = document.getElementById('summary-cards-container');
-            container.innerHTML = ''; // Clear old data
+            container.innerHTML = ''; 
 
             players.forEach(player => {
-                // --- MOCK DATA GENERATION ---
-                // (We will replace this with real data later)
-                const totalPips = Math.floor(Math.random() * 10) + 5; // 5-14
+                const totalPips = Math.floor(Math.random() * 10) + 5; 
                 const resourceAccess = (Math.random() > 0.3) ? "5/5" : "4/5";
-                const winPercentage = Math.floor(Math.random() * 20) + 20; // 20-39%
-                // --- END MOCK DATA ---
+                const winPercentage = Math.floor(Math.random() * 20) + 20; 
 
                 const cardHTML = `
                     <div class="summary-card">
@@ -941,6 +1630,8 @@
                 document.getElementById('nextButton').textContent = 'Place Numbers in Spiral →';
                 document.getElementById('nextButton').disabled = true;
                 
+                document.getElementById('randomizeButton').style.display = 'none';
+                
             } else if (currentStep === 2) {
                 if (startingHexIndex === null) return;
                 
@@ -957,7 +1648,7 @@
 
                     if (tiles[hexIndex].resource !== 'desert') {
                         tiles[hexIndex].number = numberSequence[numberIndex];
-                        addNumberToken(hex, numberSequence[numberIndex]);
+                        addNumberToken(hex, numberSequence[numberIndex]); 
                         numberIndex++;
                     } else {
                         tiles[hexIndex].number = null; 
@@ -971,16 +1662,15 @@
                 
                 document.querySelectorAll('.hex').forEach(h => h.classList.remove('start-position'));
                 
-                document.getElementById('instructions').innerHTML = 
-                    'Board setup complete! Ready to begin the settlement draft algorithm.';
+                document.querySelector('.controls').style.display = 'none';
                 
-                document.getElementById('nextButton').textContent = 'Start Algorithm →';
-                document.getElementById('nextButton').onclick = startAlgorithm;
-                document.getElementById('nextButton').disabled = false;
+                setTimeout(async () => {
+                    await startAlgorithm();
+                }, 500);
             }
         }
 
-        function startAlgorithm() {
+        async function startAlgorithm() {
             const boardData = {
                 tiles: tiles.map((tile, index) => ({
                     index: index,
@@ -992,10 +1682,17 @@
             
             console.log('Board configuration:', boardData);
             
+            // Fetch node scores from the algorithm
+            await fetchNodeScores();
+            
+            // Create nodes FIRST
             nodePositions.forEach((pos, i) => {
                 board.appendChild(createNode(pos, i + 1));
             });
             console.log(`Created ${nodePositions.length} settlement nodes`);
+            
+            // THEN apply colors (after nodes exist in DOM)
+            applyNodeScoreColors();
 
             document.getElementById('player-sidebar').style.display = 'flex';
             populateSidebar();
@@ -1008,6 +1705,11 @@
             hexPositions.forEach((pos, i) => {
                 board.appendChild(createHex(pos, i));
             });
+            
+            portPositions.forEach((pos, i) => {
+                board.appendChild(createPort(pos, portTypes[i]));
+            });
+
             console.log('Settler Board Setup initialized');
         }
 

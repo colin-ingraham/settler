@@ -1,8 +1,9 @@
+
+
 from django.urls import path
 from . import views
 
-app_name = 'game'
-
 urlpatterns = [
     path('', views.catan_board, name='catan_board'),
+    path('api/calculate-scores/', views.get_node_scores, name='get_node_scores'),
 ]
