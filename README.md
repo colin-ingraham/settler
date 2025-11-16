@@ -1,7 +1,7 @@
 # Settler - Catan Settlement Placement Tool
 
 An intelligent web application that helps Settlers of Catan players make optimal settlement placement decisions during the initial draft phase.
-
+**Go to ingrahamc.pythonanywhere.com to access the project**
 Created by Colin Ingraham, Josh Schmitt, and Sam Coehlo for GateHacks 2025
 ## Features
 
@@ -21,8 +21,8 @@ Created by Colin Ingraham, Josh Schmitt, and Sam Coehlo for GateHacks 2025
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/settler-catan.git
-cd settler-catan
+git clone https://github.com/colin-ingraham/settler.git
+cd settler
 ```
 
 2. Create a virtual environment:
