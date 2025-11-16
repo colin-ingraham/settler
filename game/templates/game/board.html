@@ -1146,6 +1146,293 @@
             line-height: 1.4;
             display: none; /* Hidden by default */
         }
+        /* === MOBILE RESPONSIVE === */
+        /* === MOBILE RESPONSIVE === */
+@media (max-width: 768px) {
+    #player-setup-screen {
+        justify-content: flex-start;
+        padding-top: 20px;
+    }
+
+    #player-setup-screen .header {
+        order: 1;
+        margin-bottom: 20px;
+    }
+
+    #player-setup-screen .setup-card {
+        order: 2;
+    }
+
+    /* Fix Summary Screen on Mobile */
+    #draft-summary-screen {
+        justify-content: flex-start;
+        padding-top: 20px;
+        min-height: 100vh;
+    }
+
+    #draft-summary-screen .header {
+        order: 1;
+        margin-bottom: 20px;
+    }
+
+    #summary-cards-container {
+        order: 2;
+    }
+
+    #draft-summary-screen .control-button {
+        order: 3;
+        margin-top: 10px;
+    }
+    body {
+        padding: 10px 5px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        min-height: 100vh;
+        justify-content: flex-start;
+    }
+
+    /* Setup Screen */
+    .setup-card {
+        width: 90%;
+        max-width: 320px;
+        padding: 20px 15px;
+    }
+
+    .setup-card h2 {
+        font-size: 20px;
+    }
+
+    /* Header - At Top */
+    .header {
+        margin-bottom: 15px;
+        order: 1;
+    }
+
+    .title {
+        font-size: 36px;
+        letter-spacing: 3px;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+
+    /* Game Screen - Allow Scrolling */
+    #game-screen {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        min-height: auto;
+        overflow-y: visible;
+    }
+
+    .main-content {
+        width: 100%;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Setup Steps */
+    .setup-steps {
+        padding: 8px 12px;
+        gap: 12px;
+        margin-bottom: 10px;
+        order: 2;
+    }
+
+    .step {
+        flex-direction: column;
+        gap: 3px;
+        font-size: 9px;
+    }
+
+    .step-number {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+
+    .step span {
+        display: none;
+    }
+
+    .board-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 0;
+        border-radius: 8px;
+        margin: 0 auto 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: visible;
+        order: 3;
+    }
+
+    .board {
+        transform: scale(0.5);
+        transform-origin: center center;
+        position: relative;
+        margin: -70px auto;
+        width: 700px; /* Wider to fit all content */
+        height: 560px;
+        left: -30px; /* Shift left to truly center */
+    }
+
+    /* Instructions */
+    .instructions {
+        font-size: 13px;
+        padding: 0 15px;
+        margin: 10px 0;
+        line-height: 1.4;
+        order: 5;
+    }
+
+    /* Controls */
+    .controls {
+        flex-direction: column;
+        width: calc(100% - 20px);
+        margin: 10px;
+        gap: 8px;
+        order: 6;
+    }
+
+    .control-button {
+        width: 100%;
+        padding: 14px;
+        font-size: 13px;
+    }
+
+    /* Player Sidebar - Order 5 (Below Tooltip) */
+    .player-sidebar {
+        order: 5;
+        width: calc(100% - 20px);
+        margin: 10px;
+        padding: 12px;
+        flex-direction: column;
+        position: relative;
+        margin-top: 0;
+    }
+
+    .player-sidebar h3 {
+        font-size: 15px;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+
+    #player-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .player-card {
+        padding: 8px 10px;
+        justify-content: flex-start;
+    }
+
+    .player-color-swatch {
+        width: 20px;
+        height: 20px;
+    }
+
+    .player-name {
+        font-size: 14px;
+    }
+
+    /* Tooltip - Order 4 (Below Board, Above Player List) */
+    .node-tooltip {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+        z-index: 100 !important;
+        margin: 10px !important;
+        padding: 15px;
+        min-height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        pointer-events: auto !important;
+        order: 4;
+        display: none;
+    }
+
+    .node-tooltip.visible {
+        display: block !important;
+    }
+
+    .tooltip-score-label {
+        font-size: 14px;
+    }
+
+    .resource-pip {
+        width: 22px;
+        height: 22px;
+        font-size: 13px;
+    }
+
+    .analysis-item {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    /* Mobile Confirm Button */
+    .mobile-confirm-btn {
+        width: 100%;
+        margin-top: 15px;
+        padding: 14px;
+        background: linear-gradient(135deg, #7CB342 0%, #689F38 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(124, 179, 66, 0.4);
+        font-family: 'Georgia', serif;
+        letter-spacing: 0.5px;
+    }
+
+    .mobile-confirm-btn:active {
+        transform: scale(0.98);
+    }
+
+    /* Summary Screen */
+    #summary-cards-container {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+        gap: 15px;
+    }
+
+    .summary-card {
+        padding: 15px;
+    }
+
+    .win-percentage .stat-value {
+        font-size: 32px;
+    }
+
+    .resource-breakdown {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 400px) {
+    .board {
+        transform: scale(0.42);
+        margin: -85px auto;
+    }
+
+    .title {
+        font-size: 32px;
+        letter-spacing: 2px;
+    }
+}
 
     
     </style>
@@ -1704,13 +1991,23 @@
             node.style.left = `${pos.x}px`;
             node.style.top = `${pos.y}px`;
             node.title = `Settlement Node ${id}`;
-            node.addEventListener('click', () => handleNodeClick(node, id));
             
-            node.addEventListener('mouseenter', (e) => showNodeTooltip(e, id));
-            node.addEventListener('mouseleave', hideNodeTooltip);
+            // Different behavior for mobile vs desktop
+            const isMobile = () => window.innerWidth <= 768;
+            
+            if (isMobile()) {
+                // Mobile: click shows tooltip
+                node.addEventListener('click', (e) => showNodeTooltip(e, id));
+            } else {
+                // Desktop: click places, hover shows tooltip
+                node.addEventListener('click', () => handleNodeClick(node, id));
+                node.addEventListener('mouseenter', (e) => showNodeTooltip(e, id));
+                node.addEventListener('mouseleave', hideNodeTooltip);
+            }
             
             return node;
         }
+        let selectedNodeId = null; // Track selected node on mobile
 
         function showNodeTooltip(event, nodeId) {
             if (currentStep !== 3) return;
@@ -1718,7 +2015,13 @@
             const node = event.target;
             if (node.classList.contains('placed') || node.classList.contains('disabled')) return;
             
-            // Get all the new tooltip elements
+            const isMobile = window.innerWidth <= 768;
+            
+            // On mobile, clicking selects the node
+            if (isMobile) {
+                selectedNodeId = nodeId;
+            }
+            
             const tooltip = document.getElementById('nodeTooltip');
             const scoreValueEl = document.getElementById('tooltipScoreValue');
             const scoreBarEl = document.getElementById('tooltipScoreBar');
@@ -1726,38 +2029,32 @@
             const analysisEl = document.getElementById('tooltipAnalysis');
             const fitEl = document.getElementById('tooltipFit');
             
-            // Clear old content
             resourcesEl.innerHTML = '';
             analysisEl.innerHTML = '';
             fitEl.innerHTML = '';
-            fitEl.style.display = 'none'; // Hide by default
+            fitEl.style.display = 'none';
             
             const algorithmNodeId = nodeId - 1;
             
             if (nodeScores && nodeScores[algorithmNodeId]) {
                 const nodeData = nodeScores[algorithmNodeId];
                 
-                // 1. Set Score
-                const MAX_SCORE = 18; // Assumed max score for bar percentage
+                const MAX_SCORE = 18;
                 const score = nodeData.score;
                 scoreValueEl.textContent = score;
                 const scorePercent = Math.min((score / MAX_SCORE) * 100, 100);
                 scoreBarEl.style.width = `${scorePercent}%`;
 
-                // 2. Set Resource Pips
-                // "Ore, Wheat (x2)" -> ["Ore", "Wheat (x2)"]
                 const resourceParts = nodeData.resources.split(', ');
                 if (resourceParts[0] !== 'Desert location') {
                     resourceParts.forEach(part => {
-                        // "Wheat (x2)" -> ["Wheat", "x2)"]
                         const details = part.split(' (');
-                        const resourceName = details[0].toLowerCase(); // "wheat"
+                        const resourceName = details[0].toLowerCase();
                         const count = details[1] ? parseInt(details[1].replace(/\D/g, '')) : 1;
                         
                         for (let i = 0; i < count; i++) {
                             const pip = document.createElement('div');
                             pip.className = `resource-pip ${resourceName}`;
-                            // Use 'W', 'B', 'S', 'O', 'H' (for Brick/Hill)
                             let initial = resourceName.substring(0, 1).toUpperCase();
                             if (resourceName === 'brick') initial = 'B'; 
                             if (resourceName === 'sheep') initial = 'S'; 
@@ -1768,9 +2065,7 @@
                     });
                 }
 
-                // 3. Parse and Set Analysis
                 const description = nodeData.description;
-                // "Excellent... PRO: ... CON: ... STRATEGIC FIT: ..."
                 const sentences = description.split('. ');
                 let fitText = '';
                 
@@ -1780,37 +2075,50 @@
                     
                     if (sentence.startsWith('PRO:')) {
                         item.classList.add('pro');
-                        item.textContent = sentence.substring(5); // Remove "PRO: "
+                        item.textContent = sentence.substring(5);
                         analysisEl.appendChild(item);
                     } else if (sentence.startsWith('CON:')) {
                         item.classList.add('con');
-                        item.textContent = sentence.substring(5); // Remove "CON: "
+                        item.textContent = sentence.substring(5);
                         analysisEl.appendChild(item);
                     } else if (sentence.startsWith('STRATEGIC FIT:')) {
-                        fitText = sentence.substring(15); // Remove "STRATEGIC FIT: "
-                    } else if (sentence.length > 1) { // Avoid empty strings
+                        fitText = sentence.substring(15);
+                    } else if (sentence.length > 1) {
                         item.classList.add('info');
                         item.textContent = sentence.endsWith('.') ? sentence : sentence + '.';
                         analysisEl.appendChild(item);
                     }
                 });
 
-                // 4. Set Strategic Fit
                 if (fitText) {
                     fitEl.textContent = fitText;
                     fitEl.style.display = 'block';
                 }
-
             } else {
-                // Fallback
                 scoreValueEl.textContent = '...';
                 scoreBarEl.style.width = '0%';
                 analysisEl.textContent = 'Loading...';
             }
-    
+
+            // Add confirm button on mobile
+            if (isMobile) {
+                // Remove existing button if any
+                const existingBtn = tooltip.querySelector('.mobile-confirm-btn');
+                if (existingBtn) existingBtn.remove();
+                
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = 'mobile-confirm-btn';
+                confirmBtn.textContent = 'Place Settlement Here';
+                confirmBtn.onclick = () => {
+                    handleNodeClick(node, nodeId);
+                    tooltip.classList.remove('visible');
+                    selectedNodeId = null;
+                };
+                tooltip.appendChild(confirmBtn);
+            }
 
             tooltip.classList.add('visible');
-    }
+        }
 
 
         function hideNodeTooltip() {
@@ -1819,7 +2127,6 @@
         }
 
         async function handleNodeClick(node, id) {
-            // Check if node is disabled or already placed
             if (node.classList.contains('placed') || node.classList.contains('disabled')) {
                 console.log('Node unavailable');
                 return;
@@ -1829,19 +2136,24 @@
                 return;
             }
 
+            const isMobile = window.innerWidth <= 768;
+            
+            // On mobile, don't place immediately - wait for confirm button
+            if (isMobile && selectedNodeId !== id) {
+                return; // Just show tooltip, don't place
+            }
+
             const playerIndex = placementOrder[currentPlacementTurn];
             const player = players[playerIndex];
             console.log(`Node ${id} clicked by ${player.name}`);
 
-            // --- NEW: Store first-pick resources ---
             const algorithmNodeId = id - 1;
-            if (!playerResourceMap[playerIndex]) { // If this is the player's first pick
+            if (!playerResourceMap[playerIndex]) {
                 const resourceString = nodeScores[algorithmNodeId].resources;
-                // "Ore, Wood (x2)" -> ["ore", "wood"]
                 playerResourceMap[playerIndex] = resourceString
                     .toLowerCase()
                     .split(', ')
-                    .map(r => r.split(' (x')[0]) // "wood (x2)" -> "wood"
+                    .map(r => r.split(' (x')[0])
                     .filter(r => r !== 'desert' && r !== 'desert location');
                 console.log(`Player ${playerIndex} first pick resources:`, playerResourceMap[playerIndex]);
             }
@@ -1861,13 +2173,13 @@
             node.appendChild(house);
             
             node.classList.add('placed');
-            node.classList.remove('score-high', 'score-mid', 'score-low', 'score-best'); // Remove pulsing
+            node.classList.remove('score-high', 'score-mid', 'score-low', 'score-best');
             node.dataset.owner = playerIndex;
             node.style.pointerEvents = 'none';
             
-            // Disable adjacent nodes (settlement spacing rule)
-            disableAdjacentNodes(id - 1); // id is 1-indexed, need 0-indexed
+            disableAdjacentNodes(id - 1);
             currentPlacementTurn++;
+            selectedNodeId = null;
             await updateTurnIndicator();
         }
 
