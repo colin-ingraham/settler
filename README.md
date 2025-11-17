@@ -2,7 +2,7 @@
 
 An intelligent web application that helps Settlers of Catan players make optimal settlement placement decisions during the initial draft phase.
 
-**ingrahamc.pythonanywhere.com**
+Can access the project at www.settlerstrategy.com
 
 Created by Colin Ingraham, Josh Schmitt, and Sam Coehlo for GateHacks 2025
 ## Features
@@ -19,7 +19,7 @@ Created by Colin Ingraham, Josh Schmitt, and Sam Coehlo for GateHacks 2025
 - **Frontend:** Vanilla JavaScript, HTML5, CSS3
 - **Algorithm:** Custom scoring system based on resource probability and diversity
 
-## Installation
+## Local Installation
 
 1. Clone the repository:
 ```bash
